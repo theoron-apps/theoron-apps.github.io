@@ -1,4 +1,5 @@
 import { dict, LANGS } from './i18n.js';
+import { initIsland } from './island.js';
 
 const APPS = {
   NotchIsland: { icon: 'assets/img/notchisland-icon.png', tag: 'notch.tag', repo: 'theoron-apps/NotchIsland' },
@@ -126,7 +127,7 @@ function splitWords(el) {
 const fx = {
   progress: document.getElementById('progress'),
   heroCopy: document.querySelector('.hero-copy'),
-  stages: [...document.querySelectorAll('.app-stage img, .patch-icon')],
+  stages: [...document.querySelectorAll('.app-stage > img, .patch-icon')],
   parallax: [...document.querySelectorAll('[data-parallax]')],
   marquee: document.querySelector('[data-marquee]'),
   orbit: document.querySelector('.support-orbit'),
@@ -205,3 +206,6 @@ if (webglAvailable()) {
 
 applyLang(pickLang());
 loadReleases();
+
+const notchScene = document.querySelector('.notch-scene');
+if (notchScene) initIsland(notchScene, document.querySelector('.try'), { reducedMotion });
