@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Theoron — native apps for the Mac</title>
+<meta name="description" content="Theoron is a small studio crafting native Mac apps: fast, beautiful and private. NotchIsland, Outputs and Conversio.">
+<meta name="theme-color" content="#050606">
+<link rel="canonical" href="https://theoron-apps.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Theoron">
+<meta property="og:title" content="Theoron — software worth contemplating">
+<meta property="og:description" content="A small studio crafting native Mac apps: fast, beautiful and private.">
+<meta property="og:url" content="https://theoron-apps.github.io/">
+<meta property="og:image" content="https://theoron-apps.github.io/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="preload" href="assets/fonts/eb-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css">
+<script>document.documentElement.classList.replace('no-js', 'js');</script>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="nav.skip">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Theoron">Theoron<i></i></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#apps" data-i18n="nav.apps">Apps</a>
+      <a href="#releases" data-i18n="nav.releases">Releases</a>
+      <a href="#principles" data-i18n="nav.principles">Principles</a>
+      <a href="#support" data-i18n="nav.support">Support</a>
+    </nav>
+    <div class="nav-end">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="uk" aria-pressed="false">UK</button>
+        <button type="button" data-lang="ru" aria-pressed="false">RU</button>
+      </div>
+      <a class="btn btn-glass btn-sm" href="https://github.com/theoron-apps">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============================================================ hero -->
+<section class="hero" id="top">
+  <div class="hero-stage" aria-hidden="true">
+    <canvas id="sphere"></canvas>
+    <img class="sphere-fallback" src="assets/img/sphere.webp" alt="" loading="lazy" hidden>
+  </div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="wrap hero-copy">
+    <a class="pill" id="hero-pill" href="#releases">
+      <span class="dot" aria-hidden="true"></span>
+      <span><strong id="hero-pill-app">Conversio 1.6</strong> · <span id="hero-pill-text" data-i18n="conversio.tag">Windows games from Steam on your Mac</span></span>
+      <span aria-hidden="true">›</span>
+    </a>
+    <h1 data-i18n-html="hero.title">Software worth<br>contemplating</h1>
+    <p class="lead" data-i18n="hero.lead">Theoron is a small studio crafting native Mac apps: fast, beautiful and private. No analytics, no heavy dependencies, every animation made by hand.</p>
+    <div class="cta">
+      <a class="btn btn-solid btn-lg" href="#apps" data-i18n="hero.explore">Explore the apps</a>
+      <a class="btn btn-ghost btn-lg" href="https://github.com/theoron-apps"><span data-i18n="hero.github">View on GitHub</span>&nbsp;→</a>
+    </div>
+  </div>
+  <div class="hero-mark" aria-hidden="true">θεωρῶν</div>
+</section>
+
+<!-- ============================================================ apps -->
+<section class="section" id="apps">
+  <div class="wrap">
+    <header class="sec-head" data-reveal>
+      <p class="eyebrow" data-i18n="apps.eyebrow">Apps</p>
+      <h2 data-i18n="apps.title">Three apps, made slowly.</h2>
+      <p class="sec-lead" data-i18n="apps.lead">Small, focused tools that feel like they came with your Mac. Each one does a single thing, and does it beautifully.</p>
+    </header>
+
+    <!-- NotchIsland -->
+    <article class="app" id="notchisland" data-reveal>
+      <div class="app-stage">
+        <img data-img-lang="assets/img/notchisland-{lang}.jpg" src="assets/img/notchisland-en.jpg" width="1600" height="747" loading="lazy" decoding="async" alt="NotchIsland playing music in the MacBook notch" data-i18n-alt="notch.alt">
+      </div>
+      <div class="app-body">
+        <div>
+          <div class="app-id">
+            <img src="assets/img/notchisland-icon.png" width="72" height="72" alt="">
+            <div><h3>NotchIsland</h3><p class="app-tag" data-i18n="notch.tag">Dynamic Island for MacBooks with a notch</p></div>
+          </div>
+          <p class="app-desc" data-i18n="notch.desc">Your notch becomes a living island: music, notifications, timers, files and your coding agents, right where your eyes already are.</p>
+          <div class="app-cta">
+            <a class="btn btn-solid" data-download="NotchIsland" href="https://github.com/theoron-apps/NotchIsland/releases/latest">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M8 2v8.5M4 7l4 4 4-4M2.5 14h11"/></svg>
+              <span data-i18n="app.download">Download</span>
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/theoron-apps/NotchIsland">GitHub&nbsp;→</a>
+          </div>
+          <p class="app-meta"><span data-version="NotchIsland">v6.1</span><span>macOS 15+</span><span data-i18n="app.languages3">English, Ukrainian, Russian</span></p>
+        </div>
+        <ul class="features">
+          <li><span data-i18n-html="notch.f1"><b>Music</b> from Apple Music, Spotify and the browser, with a live equalizer and a glow around the island.</span></li>
+          <li><span data-i18n-html="notch.f2"><b>AI agents</b>: see what Claude Code and Codex are doing, and when they need your permission.</span></li>
+          <li><span data-i18n-html="notch.f3"><b>Notifications</b> for charging, AirPods, network and VPN, plus a compact volume bar.</span></li>
+          <li><span data-i18n-html="notch.f4"><b>Shelf</b>: a file tray with AirDrop, clipboard history and a quick note.</span></li>
+          <li><span data-i18n-html="notch.f5"><b>Stats</b>: CPU, memory, temperatures and power draw, one swipe away.</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Outputs -->
+    <article class="app" id="outputs" data-reveal>
+      <div class="app-stage">
+        <div class="patch" aria-hidden="true">
+          <svg viewBox="0 0 2400 1120" preserveAspectRatio="none">
+            <path class="cable" d="M800 560 C1120 690 1290 210 1584 206"/>
+            <path class="cable" d="M800 560 C1120 640 1290 450 1584 441"/>
+            <path class="cable" d="M800 560 C1120 600 1290 700 1584 677"/>
+            <path class="cable" d="M800 560 C1010 760 1180 1060 1330 1010"/>
+            <circle cx="1330" cy="1010" r="13" fill="#2a2d2d" stroke="rgba(242,241,236,.35)" stroke-width="3"/>
+            <path class="pulse" d="M800 560 C1120 690 1290 210 1584 206"/>
+            <path class="pulse" d="M800 560 C1120 640 1290 450 1584 441"/>
+            <path class="pulse" d="M800 560 C1120 600 1290 700 1584 677"/>
+          </svg>
+          <div class="patch-icon"><img src="assets/img/outputs-icon.png" width="512" height="512" alt=""></div>
+          <div class="patch-outs">
+            <div class="chip"><span class="jack"></span><span data-i18n="outputs.o1">Headphones</span><span class="meter"><i></i><i></i><i></i><i></i></span></div>
+            <div class="chip"><span class="jack"></span><span data-i18n="outputs.o2">Speakers</span><span class="meter"><i></i><i></i><i></i><i></i></span></div>
+            <div class="chip"><span class="jack"></span><span>AirPlay</span><span class="meter"><i></i><i></i><i></i><i></i></span></div>
+            <div class="chip off"><span class="jack"></span><span>HDMI</span><span class="meter"><i></i><i></i><i></i><i></i></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-body">
+        <div>
+          <div class="app-id">
+            <img src="assets/img/outputs-icon.png" width="72" height="72" alt="">
+            <div><h3>Outputs</h3><p class="app-tag" data-i18n="outputs.tag">Your Mac's sound on several outputs at once</p></div>
+          </div>
+          <p class="app-desc" data-i18n="outputs.desc">Play to Bluetooth and wired headphones, speakers, AirPlay and HDMI together. Every output gets its own volume, delay and EQ, and Outputs keeps them in sync.</p>
+          <div class="app-cta">
+            <a class="btn btn-solid" data-download="Outputs" href="https://github.com/theoron-apps/Outputs/releases/latest">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M8 2v8.5M4 7l4 4 4-4M2.5 14h11"/></svg>
+              <span data-i18n="app.download">Download</span>
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/theoron-apps/Outputs">GitHub&nbsp;→</a>
+          </div>
+          <p class="app-meta"><span data-version="Outputs">v1.1</span><span>macOS 14.2+</span><span data-i18n="app.free">Free</span></p>
+        </div>
+        <ul class="features">
+          <li><span data-i18n-html="outputs.f1"><b>Many outputs, one sound.</b> Pick any outputs from the menu bar and your Mac plays to all of them.</span></li>
+          <li><span data-i18n-html="outputs.f2"><b>No Bluetooth lag.</b> Outputs lines everything up on its own and remembers each set of devices.</span></li>
+          <li><span data-i18n-html="outputs.f3"><b>Per-app routing.</b> Music in one pair of headphones, a call in another.</span></li>
+          <li><span data-i18n-html="outputs.f4"><b>A living patch bay.</b> Cables sag and swing; pull a plug out and that output winds down like a record.</span></li>
+          <li><span data-i18n-html="outputs.f5"><b>No driver to install.</b> Quit Outputs and the sound goes back exactly as it was.</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Conversio -->
+    <article class="app" id="conversio" data-reveal>
+      <div class="app-stage">
+        <img data-img-lang="assets/img/conversio-{lang}.jpg" src="assets/img/conversio-en.jpg" width="1600" height="747" loading="lazy" decoding="async" alt="The Conversio game library on a Mac" data-i18n-alt="conversio.alt">
+      </div>
+      <div class="app-body">
+        <div>
+          <div class="app-id">
+            <img src="assets/img/conversio-icon.png" width="72" height="72" alt="">
+            <div><h3>Conversio</h3><p class="app-tag" data-i18n="conversio.tag">Windows games from Steam on your Mac</p></div>
+          </div>
+          <p class="app-desc" data-i18n="conversio.desc">Runs the Windows version of Steam and your games on Apple silicon, like CrossOver, but free. One click to set up, a library with Steam artwork, and settings for every game.</p>
+          <div class="app-cta">
+            <a class="btn btn-solid" data-download="Conversio" href="https://github.com/theoron-apps/Conversio/releases/latest">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M8 2v8.5M4 7l4 4 4-4M2.5 14h11"/></svg>
+              <span data-i18n="app.download">Download</span>
+            </a>
+            <a class="btn btn-glass" href="/Conversio/"><span data-i18n="app.website">Website</span>&nbsp;↗</a>
+            <a class="btn btn-ghost" href="https://github.com/theoron-apps/Conversio">GitHub&nbsp;→</a>
+          </div>
+          <p class="app-meta"><span data-version="Conversio">v1.6</span><span>macOS 15+</span><span>Apple silicon</span><span data-i18n="app.free">Free</span></p>
+        </div>
+        <ul class="features">
+          <li><span data-i18n-html="conversio.f1"><b>One-click setup.</b> Rosetta 2, Wine, DXVK and Steam for Windows, downloaded and installed for you.</span></li>
+          <li><span data-i18n-html="conversio.f2"><b>Your Steam library</b> with covers, search and recently played games. Double-click to play.</span></li>
+          <li><span data-i18n-html="conversio.f3"><b>DirectX 12</b> through D3DMetal from Apple's free Game Porting Toolkit.</span></li>
+          <li><span data-i18n-html="conversio.f4"><b>Automatic graphics.</b> Picks D3DMetal or DXVK for every game and remembers what worked.</span></li>
+          <li><span data-i18n-html="conversio.f5"><b>Bottles</b>: separate Windows installations, each with its own drive C: and settings.</span></li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================ releases -->
+<section class="section" id="releases">
+  <div class="wrap">
+    <header class="sec-head" data-reveal>
+      <p class="eyebrow" data-i18n="rel.eyebrow">Releases</p>
+      <h2 data-i18n="rel.title">Fresh from the workshop.</h2>
+      <p class="sec-lead" data-i18n="rel.lead">Every app updates itself, but here is what changed lately.</p>
+    </header>
+    <ol class="releases-list" id="release-list" data-reveal></ol>
+    <a class="rel-all" href="https://github.com/theoron-apps" data-reveal><span data-i18n="rel.all">All releases on GitHub</span>&nbsp;→</a>
+  </div>
+</section>
+
+<!-- ============================================================ principles -->
+<section class="section" id="principles">
+  <div class="wrap">
+    <header class="sec-head" data-reveal>
+      <p class="eyebrow" data-i18n="pr.eyebrow">Principles</p>
+      <h2 data-i18n="pr.title">What we care about.</h2>
+    </header>
+    <div class="principles-grid">
+      <article class="principle" data-reveal>
+        <div class="num" aria-hidden="true">I</div>
+        <h3 data-i18n="pr.1.t">Native</h3>
+        <p data-i18n="pr.1.d">Built with Apple's own frameworks. No web wrappers and no heavy dependencies: apps that feel at home on a Mac and start in an instant.</p>
+      </article>
+      <article class="principle" data-reveal>
+        <div class="num" aria-hidden="true">II</div>
+        <h3 data-i18n="pr.2.t">Private</h3>
+        <p data-i18n="pr.2.d">No analytics, no accounts, no tracking. Your data stays on your device. Even this website loads nothing from third parties.</p>
+      </article>
+      <article class="principle" data-reveal>
+        <div class="num" aria-hidden="true">III</div>
+        <h3 data-i18n="pr.3.t">Crafted</h3>
+        <p data-i18n="pr.3.d">Animations, sound and haptics are designed with care: the small details you feel long before you notice them.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ support -->
+<section class="section" id="support">
+  <div class="wrap">
+    <div class="support-card" data-reveal>
+      <div>
+        <p class="eyebrow" data-i18n="sup.eyebrow">Support</p>
+        <h2 data-i18n="sup.title">Made by an independent studio.</h2>
+        <p class="sup-text" data-i18n="sup.text">No investors, no ads, no subscriptions. If our apps make your Mac a little better, you can support the work. It lets us spend more time on the details.</p>
+        <div class="cta">
+          <a class="btn btn-solid btn-lg" href="https://send.monobank.ua/jar/2jGp4yDQPd"><span class="heart" aria-hidden="true">♥</span>&nbsp;<span data-i18n="sup.button">Support Theoron</span></a>
+          <a class="btn btn-glass btn-lg" href="https://t.me/TheoronApps">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.4 4.3 18.2 19.5c-.24 1.06-.87 1.32-1.76.82l-4.86-3.58-2.34 2.25c-.26.26-.48.48-.98.48l.35-4.95 9-8.13c.39-.35-.09-.54-.6-.2L5.88 13.2 1.1 11.7c-1.04-.33-1.06-1.04.22-1.54L20.03 2.95c.87-.32 1.63.2 1.37 1.35Z"/></svg>
+            Telegram
+          </a>
+        </div>
+      </div>
+      <div class="support-orbit" aria-hidden="true"><i></i><i></i><i></i><b></b><em></em></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================ footer -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#top">Theoron<i></i></a>
+        <p class="motto" data-i18n="foot.motto">θεωρῶν — the one who contemplates</p>
+      </div>
+      <div>
+        <h4 data-i18n="nav.apps">Apps</h4>
+        <ul>
+          <li><a href="#notchisland">NotchIsland</a></li>
+          <li><a href="#outputs">Outputs</a></li>
+          <li><a href="/Conversio/">Conversio</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="foot.community">Community</h4>
+        <ul>
+          <li><a href="https://t.me/TheoronApps">Telegram</a></li>
+          <li><a href="https://github.com/theoron-apps/discussions" data-i18n="foot.discussions">Discussions</a></li>
+          <li><a href="https://github.com/theoron-apps">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Theoron</span>
+      <span data-i18n="foot.note">Made with care. No cookies, no trackers.</span>
+    </div>
+  </div>
+</footer>
+
+<script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

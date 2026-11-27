@@ -1,0 +1,112 @@
+{
+  "updated": "2026-11-27T00:20:06.089Z",
+  "apps": {
+    "NotchIsland": {
+      "repo": "theoron-apps/NotchIsland",
+      "latest": {
+        "tag": "v6.1",
+        "name": "NotchIsland 6.1",
+        "date": null,
+        "url": "https://github.com/theoron-apps/NotchIsland/releases/tag/v6.1",
+        "dmg": null,
+        "prerelease": false
+      }
+    },
+    "Outputs": {
+      "repo": "theoron-apps/Outputs",
+      "latest": {
+        "tag": "v1.1",
+        "name": "Outputs 1.1",
+        "date": null,
+        "url": "https://github.com/theoron-apps/Outputs/releases/tag/v1.1",
+        "dmg": null,
+        "prerelease": false
+      }
+    },
+    "Conversio": {
+      "repo": "theoron-apps/Conversio",
+      "latest": {
+        "tag": "v1.6",
+        "name": "Conversio 1.6",
+        "date": null,
+        "url": "https://github.com/theoron-apps/Conversio/releases/tag/v1.6",
+        "dmg": null,
+        "prerelease": false
+      }
+    }
+  },
+  "releases": [
+    {
+      "app": "NotchIsland",
+      "tag": "v6.1",
+      "name": "NotchIsland 6.1",
+      "date": null,
+      "url": "https://github.com/theoron-apps/NotchIsland/releases/tag/v6.1",
+      "summary": null,
+      "prerelease": false
+    },
+    {
+      "app": "Conversio",
+      "tag": "v1.6",
+      "name": "Conversio 1.6",
+      "date": null,
+      "url": "https://github.com/theoron-apps/Conversio/releases/tag/v1.6",
+      "summary": null,
+      "prerelease": false
+    },
+    {
+      "app": "Outputs",
+      "tag": "v1.1",
+      "name": "Outputs 1.1",
+      "date": null,
+      "url": "https://github.com/theoron-apps/Outputs/releases/tag/v1.1",
+      "summary": null,
+      "prerelease": false
+    },
+    {
+      "app": "NotchIsland",
+      "tag": "v6.0",
+      "name": "NotchIsland 6.0",
+      "date": null,
+      "url": "https://github.com/theoron-apps/NotchIsland/releases/tag/v6.0",
+      "summary": null,
+      "prerelease": false
+    },
+    {
+      "app": "Conversio",
+      "tag": "v1.5",
+      "name": "Conversio 1.5",
+      "date": null,
+      "url": "https://github.com/theoron-apps/Conversio/releases/tag/v1.5",
+      "summary": null,
+      "prerelease": false
+    },
+    {
+      "app": "Outputs",
+      "tag": "v1.0",
+      "name": "Outputs 1.0",
+      "date": null,
+      "url": "https://github.com/theoron-apps/Outputs/releases/tag/v1.0",
+      "summary": null,
+      "prerelease": false
+    },
+    {
+      "app": "NotchIsland",
+      "tag": "v5.0",
+      "name": "NotchIsland 5.0",
+      "date": null,
+      "url": "https://github.com/theoron-apps/NotchIsland/releases/tag/v5.0",
+      "summary": null,
+      "prerelease": false
+    },
+    {
+      "app": "Conversio",
+      "tag": "v1.4",
+      "name": "Conversio 1.4",
+      "date": null,
+      "url": "https://github.com/theoron-apps/Conversio/releases/tag/v1.4",
+      "summary": null,
+      "prerelease": false
+    }
+  ]
+}
