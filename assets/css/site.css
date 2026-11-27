@@ -152,29 +152,31 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(40px, 4.6vw, 
 .features b { color: var(--ink); font-weight: 500; }
 
 /* NotchIsland stage: the island drawn in HTML, sized in container units so it stays sharp */
-.notch-scene { position: absolute; inset: 0; background: radial-gradient(70% 60% at 50% 0%, #17151f, #08080b 70%); overflow: hidden; }
-.notch-scene .mac { position: absolute; left: 9.4cqw; right: 9.4cqw; top: 5cqw; bottom: -4cqw; border-radius: 3.4cqw 3.4cqw 0 0; padding: 1cqw 1cqw 0;
-  background: linear-gradient(#2a2a30, #151519); box-shadow: 0 0 0 .12cqw rgba(255, 255, 255, .08) inset, 0 3cqw 8cqw rgba(0, 0, 0, .6); }
-.notch-scene .screen { position: relative; height: 100%; border-radius: 2.4cqw 2.4cqw 0 0; overflow: hidden;
-  background: radial-gradient(55% 70% at 18% 30%, rgba(122, 64, 190, .85), transparent 70%), radial-gradient(50% 70% at 86% 40%, rgba(66, 76, 205, .75), transparent 70%),
-  radial-gradient(70% 45% at 40% 92%, rgba(208, 72, 140, .35), transparent 70%), linear-gradient(180deg, #2b1f63, #1d1747 60%, #120f2b); }
-.notch-scene .screen::after { content: ""; position: absolute; inset: auto 0 0; height: 40%; background: linear-gradient(transparent, rgba(8, 8, 11, .75)); }
+.notch-scene { position: absolute; inset: 0; background: #0c0b10; overflow: hidden; }
+.notch-scene .mac { position: absolute; left: 9.4cqw; right: 9.4cqw; top: 5cqw; bottom: -4cqw; border-radius: 3.4cqw 3.4cqw 0 0; padding: .9cqw .9cqw 0;
+  background: #050507; box-shadow: 0 0 0 .1cqw rgba(255, 255, 255, .07) inset, 0 3cqw 8cqw rgba(0, 0, 0, .6); }
+.notch-scene .screen { position: relative; height: 100%; border-radius: 2.5cqw 2.5cqw 0 0; overflow: hidden;
+  background: radial-gradient(48% 70% at 20% 68%, #7a3360 0%, rgba(122, 51, 96, 0) 70%), radial-gradient(50% 80% at 90% 42%, #4a3f98 0%, rgba(74, 63, 152, 0) 72%),
+  radial-gradient(45% 55% at 52% 22%, #6a3e74 0%, rgba(106, 62, 116, 0) 72%), radial-gradient(40% 50% at 96% 6%, #3a5f8c 0%, rgba(58, 95, 140, 0) 70%),
+  linear-gradient(90deg, #4e2360 0%, #663b70 48%, #4b4290 100%); }
+.notch-scene .screen::before { content: ""; position: absolute; inset: 0; opacity: .09; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.notch-scene .screen::after { content: ""; position: absolute; inset: auto 0 0; height: 35%; background: linear-gradient(rgba(12, 11, 16, 0), rgba(12, 11, 16, .55)); }
 .notch-scene .menubar { position: absolute; left: 0; right: 0; top: 0; height: 3.4cqw; display: flex; align-items: center; gap: 2cqw; padding: 0 2.6cqw;
-  font-size: 1.35cqw; font-weight: 500; color: rgba(255, 255, 255, .92); }
+  font-size: 1.35cqw; font-weight: 500; color: #fff; text-shadow: 0 .08cqw .3cqw rgba(0, 0, 0, .25); letter-spacing: -.01em; }
 .notch-scene .menubar b { font-weight: 700; }
 .notch-scene .mb-end { margin-left: auto; display: flex; align-items: center; gap: 1.6cqw; }
 .notch-scene .mb-end svg { width: 1.5cqw; height: 1.5cqw; }
 .notch-scene .island { position: absolute; left: 50%; top: -1cqw; width: 39.2cqw; transform: translateX(-50%); padding: 4.4cqw 2.6cqw 1.3cqw; border-radius: 0 0 3.2cqw 3.2cqw;
-  color: #fff; border: .3cqw solid transparent; border-top: 0;
-  background-image: linear-gradient(#000, #000), linear-gradient(90deg, #f0a35c, #e86a6a 55%, #d85476); background-origin: border-box; background-clip: padding-box, border-box;
-  box-shadow: 0 0 2.6cqw rgba(232, 106, 106, .35), 0 1.4cqw 4cqw rgba(0, 0, 0, .55); animation: island-glow 4s ease-in-out infinite; }
-@keyframes island-glow { 50% { box-shadow: 0 0 4cqw rgba(240, 150, 100, .5), 0 1.4cqw 4cqw rgba(0, 0, 0, .55); } }
+  background: #000; color: #fff; box-shadow: 0 1.2cqw 3.6cqw rgba(0, 0, 0, .38); letter-spacing: -.01em; }
 .notch-scene .np { display: flex; align-items: center; gap: 1.5cqw; }
-.notch-scene .art { position: relative; width: 4.6cqw; height: 4.6cqw; flex: none; border-radius: 1cqw; overflow: hidden;
-  background: linear-gradient(180deg, #ffc56a 0%, #f59a5b 45%, #ec6b6b 100%); }
-.notch-scene .art i { position: absolute; left: 50%; top: 22%; width: 1.9cqw; height: 1.9cqw; margin-left: -.95cqw; border-radius: 50%; background: #ffe6a8; }
-.notch-scene .art::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 42%;
-  background: repeating-linear-gradient(180deg, #ec6b6b 0 .28cqw, #f3a0a0 .28cqw .5cqw); }
+.notch-scene .art { position: relative; width: 4.6cqw; height: 4.6cqw; flex: none; border-radius: .9cqw; overflow: hidden;
+  background: radial-gradient(circle at 50% 36%, #fff3cf 0 11%, #ffd27f 17%, rgba(255, 196, 120, 0) 46%), linear-gradient(180deg, #f9b15f 0%, #ef8657 48%, #c94f69 100%);
+  box-shadow: 0 0 0 .06cqw rgba(255, 255, 255, .08) inset; }
+.notch-scene .art i { position: absolute; inset: 0; opacity: .18; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.notch-scene .art::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 40%; opacity: .55;
+  background: repeating-linear-gradient(180deg, rgba(150, 40, 80, .55) 0 .22cqw, rgba(255, 170, 150, .25) .22cqw .48cqw); }
 .notch-scene .meta { display: grid; gap: .25cqw; min-width: 0; }
 .notch-scene .meta b { font-size: 1.5cqw; font-weight: 600; white-space: nowrap; }
 .notch-scene .meta span { font-size: 1.3cqw; color: rgba(255, 255, 255, .6); }
@@ -305,7 +307,7 @@ footer { margin-top: 150px; border-top: 1px solid var(--line); padding: 56px 0 4
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   [data-reveal] { opacity: 1; transform: none; transition: none; }
-  .pill .dot, .patch .pulse, .chip .meter i, .support-orbit em, .hero-copy > *, .notch-scene .island, .notch-scene .eq i, .notch-scene .track i { animation: none; }
+  .pill .dot, .patch .pulse, .chip .meter i, .support-orbit em, .hero-copy > *, .notch-scene .eq i, .notch-scene .track i { animation: none; }
   .w > span, .app .features li, .releases-list .rel, .principle .num { transform: none; opacity: 1; transition: none; }
   .app[data-reveal] { transform: none; }
   .patch .cable { stroke-dashoffset: 0; transition: none; } .patch .pulse { opacity: 1; }
