@@ -72,10 +72,6 @@
       <a class="btn btn-ghost btn-lg" href="https://github.com/theoron-apps"><span data-i18n="hero.github">View on GitHub</span>&nbsp;→</a>
     </div>
   </div>
-  <div class="drag-hint" id="drag-hint" aria-hidden="true">
-    <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0 1 13.2-4.9M19.5 12a7.5 7.5 0 0 1-13.2 4.9M18 3.5v3.8h-3.8M6 20.5v-3.8h3.8"/></svg>
-    <span data-i18n="hero.drag">Drag to turn the sphere</span>
-  </div>
   <div class="hero-mark" aria-hidden="true">θεωρῶν</div>
 </section>
 
@@ -93,7 +89,38 @@
     <!-- NotchIsland -->
     <article class="app spot" id="notchisland" data-reveal>
       <div class="app-stage">
-        <img data-img-lang="assets/img/notchisland-{lang}.jpg" src="assets/img/notchisland-en.jpg" width="1600" height="747" loading="lazy" decoding="async" alt="NotchIsland playing music in the MacBook notch" data-i18n-alt="notch.alt">
+        <div class="notch-scene" role="img" aria-label="NotchIsland playing music in the MacBook notch" data-i18n-aria="notch.alt">
+          <div class="mac"><div class="screen">
+            <div class="menubar">
+              <b>Finder</b><span data-i18n="notch.file">File</span><span data-i18n="notch.edit">Edit</span>
+              <span class="mb-end">
+                <svg viewBox="0 0 16 16"><rect x="1.5" y="2.5" width="13" height="5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="5" r="1.5" fill="currentColor"/><rect x="1.5" y="9" width="13" height="5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="4" cy="11.5" r="1.5" fill="currentColor"/></svg>
+                <span data-i18n="notch.date">Mon 27 Oct</span><span>9:41</span>
+              </span>
+            </div>
+            <div class="island">
+              <div class="np">
+                <div class="art"><i></i></div>
+                <div class="meta"><b>Golden Hour Drive</b><span>Neon Coast</span></div>
+                <div class="star"><svg viewBox="0 0 24 24"><path fill="currentColor" d="m12 3 2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z"/></svg></div>
+                <div class="eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              </div>
+              <div class="prog"><span>1:24</span><div class="track"><i></i></div><span>-2:09</span></div>
+              <div class="ctrls">
+                <svg viewBox="0 0 24 24" class="dim"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 7h3.5c4 0 6 10 10 10H21M3 17h3.5c1.6 0 2.8-1.6 3.9-3.6M13.6 9.6C14.7 8 15.6 7 17 7h4M18.5 4.5 21 7l-2.5 2.5M18.5 14.5 21 17l-2.5 2.5"/></svg>
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11.5 6.5v11L4 12zM20 6.5v11L12.5 12z"/></svg>
+                <svg viewBox="0 0 24 24" class="big"><rect x="6.5" y="5" width="3.8" height="14" rx="1" fill="currentColor"/><rect x="13.7" y="5" width="3.8" height="14" rx="1" fill="currentColor"/></svg>
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 6.5v11l7.5-5.5zM12.5 6.5v11L20 12z"/></svg>
+                <svg viewBox="0 0 24 24" class="dim"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 12V10a3 3 0 0 1 3-3h12M16 4l3 3-3 3M20 12v2a3 3 0 0 1-3 3H5M8 20l-3-3 3-3"/></svg>
+              </div>
+              <div class="vol"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/></svg><div class="track"><i></i></div></div>
+              <div class="dots"><i></i><i></i></div>
+            </div>
+            <div class="dock">
+              <img src="assets/img/notchisland-icon.png" alt=""><img src="assets/img/outputs-icon.png" alt=""><img src="assets/img/conversio-icon.png" alt="">
+            </div>
+          </div></div>
+        </div>
       </div>
       <div class="app-body">
         <div>
@@ -173,7 +200,7 @@
     <!-- Conversio -->
     <article class="app spot" id="conversio" data-reveal>
       <div class="app-stage">
-        <img data-img-lang="assets/img/conversio-{lang}.jpg" src="assets/img/conversio-en.jpg" width="1600" height="747" loading="lazy" decoding="async" alt="The Conversio game library on a Mac" data-i18n-alt="conversio.alt">
+        <img data-img-lang="assets/img/conversio-{lang}.webp" src="assets/img/conversio-en.webp" width="2400" height="1120" loading="lazy" decoding="async" alt="The Conversio game library on a Mac" data-i18n-alt="conversio.alt">
       </div>
       <div class="app-body">
         <div>

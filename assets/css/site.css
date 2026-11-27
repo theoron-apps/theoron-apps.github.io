@@ -94,13 +94,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero-copy > :nth-child(3) { animation-delay: .45s; } .hero-copy > :nth-child(4) { animation-delay: .6s; }
 @keyframes rise { from { opacity: 0; transform: translateY(28px); filter: blur(6px); } }
 #sphere { touch-action: pan-y; }
-.drag-hint { position: absolute; z-index: 2; left: 72%; bottom: 9%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; padding: 7px 14px 7px 11px;
-  border-radius: 999px; border: 1px solid var(--line); background: rgba(5, 6, 6, .5); backdrop-filter: blur(8px); font-size: 13px; color: var(--muted);
-  pointer-events: none; opacity: 0; transition: opacity .8s var(--ease) 1.6s; white-space: nowrap; }
-.drag-hint svg { width: 16px; height: 16px; animation: wobble 2.8s ease-in-out infinite; }
-.hero.sphere-ready .drag-hint { opacity: 1; }
-.hero .drag-hint.used { opacity: 0; transition-delay: 0s; }
-@keyframes wobble { 50% { transform: rotate(-35deg); } }
 .pill { display: inline-flex; align-items: center; gap: 10px; min-height: 34px; padding: 6px 14px 6px 12px; border-radius: 999px; font-size: 14px; color: var(--muted);
   border: 1px solid rgba(140, 194, 171, .28); background: rgba(63, 117, 97, .1); transition: border-color .25s, background .25s; }
 .pill:hover { border-color: rgba(140, 194, 171, .55); background: rgba(63, 117, 97, .16); }
@@ -129,8 +122,8 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(40px, 4.6vw, 
 .app { position: relative; border-radius: 28px; overflow: hidden; background: linear-gradient(180deg, rgba(242, 241, 236, .045), rgba(242, 241, 236, .015));
   border: 1px solid var(--line); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05); }
 .app + .app { margin-top: 32px; }
-.app-stage { position: relative; aspect-ratio: 2400 / 1120; overflow: hidden; background: #08090a; border-bottom: 1px solid var(--line); }
-.app-stage img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); will-change: transform; }
+.app-stage { container-type: inline-size; position: relative; aspect-ratio: 2400 / 1120; overflow: hidden; background: #08090a; border-bottom: 1px solid var(--line); }
+.app-stage img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); will-change: transform; }
 .app[data-reveal] { transform: perspective(1400px) translateY(80px) rotateX(10deg) scale(.96); transform-origin: 50% 0; transition: opacity 1.1s var(--ease), transform 1.4s var(--ease); }
 .app[data-reveal].in { transform: none; }
 .app .features li { opacity: 0; transform: translateX(-14px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
@@ -157,6 +150,62 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(40px, 4.6vw, 
 .features li:last-child { border-bottom: 1px solid var(--line); }
 .features li::before { content: ""; width: 7px; height: 7px; margin: 8px 0 0 2px; border-radius: 50%; border: 1.5px solid var(--green); }
 .features b { color: var(--ink); font-weight: 500; }
+
+/* NotchIsland stage: the island drawn in HTML, sized in container units so it stays sharp */
+.notch-scene { position: absolute; inset: 0; background: radial-gradient(70% 60% at 50% 0%, #17151f, #08080b 70%); overflow: hidden; }
+.notch-scene .mac { position: absolute; left: 9.4cqw; right: 9.4cqw; top: 5cqw; bottom: -4cqw; border-radius: 3.4cqw 3.4cqw 0 0; padding: 1cqw 1cqw 0;
+  background: linear-gradient(#2a2a30, #151519); box-shadow: 0 0 0 .12cqw rgba(255, 255, 255, .08) inset, 0 3cqw 8cqw rgba(0, 0, 0, .6); }
+.notch-scene .screen { position: relative; height: 100%; border-radius: 2.4cqw 2.4cqw 0 0; overflow: hidden;
+  background: radial-gradient(55% 70% at 18% 30%, rgba(122, 64, 190, .85), transparent 70%), radial-gradient(50% 70% at 86% 40%, rgba(66, 76, 205, .75), transparent 70%),
+  radial-gradient(70% 45% at 40% 92%, rgba(208, 72, 140, .35), transparent 70%), linear-gradient(180deg, #2b1f63, #1d1747 60%, #120f2b); }
+.notch-scene .screen::after { content: ""; position: absolute; inset: auto 0 0; height: 40%; background: linear-gradient(transparent, rgba(8, 8, 11, .75)); }
+.notch-scene .menubar { position: absolute; left: 0; right: 0; top: 0; height: 3.4cqw; display: flex; align-items: center; gap: 2cqw; padding: 0 2.6cqw;
+  font-size: 1.35cqw; font-weight: 500; color: rgba(255, 255, 255, .92); }
+.notch-scene .menubar b { font-weight: 700; }
+.notch-scene .mb-end { margin-left: auto; display: flex; align-items: center; gap: 1.6cqw; }
+.notch-scene .mb-end svg { width: 1.5cqw; height: 1.5cqw; }
+.notch-scene .island { position: absolute; left: 50%; top: -1cqw; width: 39.2cqw; transform: translateX(-50%); padding: 4.4cqw 2.6cqw 1.3cqw; border-radius: 0 0 3.2cqw 3.2cqw;
+  color: #fff; border: .3cqw solid transparent; border-top: 0;
+  background-image: linear-gradient(#000, #000), linear-gradient(90deg, #f0a35c, #e86a6a 55%, #d85476); background-origin: border-box; background-clip: padding-box, border-box;
+  box-shadow: 0 0 2.6cqw rgba(232, 106, 106, .35), 0 1.4cqw 4cqw rgba(0, 0, 0, .55); animation: island-glow 4s ease-in-out infinite; }
+@keyframes island-glow { 50% { box-shadow: 0 0 4cqw rgba(240, 150, 100, .5), 0 1.4cqw 4cqw rgba(0, 0, 0, .55); } }
+.notch-scene .np { display: flex; align-items: center; gap: 1.5cqw; }
+.notch-scene .art { position: relative; width: 4.6cqw; height: 4.6cqw; flex: none; border-radius: 1cqw; overflow: hidden;
+  background: linear-gradient(180deg, #ffc56a 0%, #f59a5b 45%, #ec6b6b 100%); }
+.notch-scene .art i { position: absolute; left: 50%; top: 22%; width: 1.9cqw; height: 1.9cqw; margin-left: -.95cqw; border-radius: 50%; background: #ffe6a8; }
+.notch-scene .art::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 42%;
+  background: repeating-linear-gradient(180deg, #ec6b6b 0 .28cqw, #f3a0a0 .28cqw .5cqw); }
+.notch-scene .meta { display: grid; gap: .25cqw; min-width: 0; }
+.notch-scene .meta b { font-size: 1.5cqw; font-weight: 600; white-space: nowrap; }
+.notch-scene .meta span { font-size: 1.3cqw; color: rgba(255, 255, 255, .6); }
+.notch-scene .star { margin-left: auto; width: 2.8cqw; height: 2.8cqw; display: grid; place-items: center; border-radius: 50%; background: #1f1f22; }
+.notch-scene .star svg { width: 1.4cqw; height: 1.4cqw; }
+.notch-scene .eq { display: flex; align-items: center; gap: .26cqw; height: 2.4cqw; }
+.notch-scene .eq i { width: .26cqw; height: 100%; border-radius: .2cqw; background: linear-gradient(#f0a35c, #e8607a); transform-origin: center; animation: eq 1s ease-in-out infinite alternate; }
+.notch-scene .eq i:nth-child(1) { animation-delay: -.2s; } .notch-scene .eq i:nth-child(2) { animation-delay: -.7s; animation-duration: .8s; }
+.notch-scene .eq i:nth-child(3) { animation-delay: -.4s; animation-duration: 1.2s; } .notch-scene .eq i:nth-child(4) { animation-delay: -.9s; }
+.notch-scene .eq i:nth-child(5) { animation-delay: -.1s; animation-duration: .9s; } .notch-scene .eq i:nth-child(6) { animation-delay: -.6s; animation-duration: 1.1s; }
+.notch-scene .eq i:nth-child(7) { animation-delay: -.3s; animation-duration: .7s; }
+@keyframes eq { from { transform: scaleY(.25); } to { transform: scaleY(1); } }
+.notch-scene .prog { display: flex; align-items: center; gap: 1.4cqw; margin-top: 1.6cqw; font-size: 1.05cqw; color: rgba(255, 255, 255, .55); font-variant-numeric: tabular-nums; }
+.notch-scene .track { flex: 1; height: .42cqw; border-radius: 1cqw; background: rgba(255, 255, 255, .18); overflow: hidden; }
+.notch-scene .track i { display: block; height: 100%; width: 40%; border-radius: inherit; background: #fff; }
+.notch-scene .prog .track i { animation: progress 30s linear infinite; }
+@keyframes progress { from { width: 38%; } to { width: 62%; } }
+.notch-scene .ctrls { display: flex; align-items: center; justify-content: space-between; margin: 1.5cqw .6cqw 0; }
+.notch-scene .ctrls svg { width: 2.3cqw; height: 2.3cqw; }
+.notch-scene .ctrls svg.big { width: 2.9cqw; height: 2.9cqw; }
+.notch-scene .ctrls svg.dim { opacity: .55; width: 1.9cqw; }
+.notch-scene .vol { display: flex; align-items: center; gap: 1.2cqw; margin-top: 1.5cqw; color: rgba(255, 255, 255, .55); }
+.notch-scene .vol svg { width: 1.3cqw; height: 1.3cqw; }
+.notch-scene .vol .track i { width: 70%; }
+.notch-scene .dots { display: flex; justify-content: center; gap: .4cqw; margin-top: 1.1cqw; }
+.notch-scene .dots i { width: .5cqw; height: .5cqw; border-radius: 1cqw; background: rgba(255, 255, 255, .35); }
+.notch-scene .dots i:first-child { width: 1.3cqw; background: #fff; }
+.notch-scene .dock { position: absolute; z-index: 1; left: 50%; bottom: 5.4cqw; transform: translateX(-50%); display: flex; gap: 1.1cqw; padding: .9cqw 1.1cqw;
+  border-radius: 1.8cqw; background: rgba(255, 255, 255, .12); border: .08cqw solid rgba(255, 255, 255, .18); backdrop-filter: blur(1.2cqw); -webkit-backdrop-filter: blur(1.2cqw); }
+.notch-scene .dock img { width: 4.2cqw; height: 4.2cqw; filter: drop-shadow(0 .4cqw .8cqw rgba(0, 0, 0, .35)); }
+.notch-scene .dock::after { content: ""; position: absolute; left: calc(1.1cqw + 2.1cqw - .25cqw); bottom: .25cqw; width: .5cqw; height: .5cqw; border-radius: 50%; background: rgba(255, 255, 255, .8); }
 
 /* Outputs stage: an illustrated patch bay */
 .patch { position: absolute; inset: 0; background: radial-gradient(60% 90% at 26% 50%, rgba(255, 122, 60, .10), transparent 60%), radial-gradient(70% 80% at 80% 50%, rgba(63, 117, 97, .14), transparent 65%), #08090a; }
@@ -256,7 +305,7 @@ footer { margin-top: 150px; border-top: 1px solid var(--line); padding: 56px 0 4
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   [data-reveal] { opacity: 1; transform: none; transition: none; }
-  .pill .dot, .patch .pulse, .chip .meter i, .support-orbit em, .drag-hint svg, .hero-copy > * { animation: none; }
+  .pill .dot, .patch .pulse, .chip .meter i, .support-orbit em, .hero-copy > *, .notch-scene .island, .notch-scene .eq i, .notch-scene .track i { animation: none; }
   .w > span, .app .features li, .releases-list .rel, .principle .num { transform: none; opacity: 1; transition: none; }
   .app[data-reveal] { transform: none; }
   .patch .cable { stroke-dashoffset: 0; transition: none; } .patch .pulse { opacity: 1; }
@@ -277,7 +326,6 @@ footer { margin-top: 150px; border-top: 1px solid var(--line); padding: 56px 0 4
 }
 /* Portrait screens: the sphere sits above the text (sphere.js uses the same 1.1 aspect rule). */
 @media (max-aspect-ratio: 11/10) {
-  .drag-hint { left: 50%; bottom: auto; top: 44svh; }
   .hero-copy { padding-top: 52svh; padding-bottom: 72px; }
   .hero::after { right: auto; left: 50%; top: 26%; transform: translate(-50%, -50%); width: 120vw; height: 120vw; }
   .sphere-fallback { width: min(78vw, 560px); right: 50%; top: 25%; transform: translate(50%, -50%); }

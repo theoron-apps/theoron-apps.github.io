@@ -35,6 +35,7 @@ function applyLang(next, { remember = false } = {}) {
   for (const el of document.querySelectorAll('[data-i18n-html]')) el.innerHTML = t(el.dataset.i18nHtml);
   for (const el of document.querySelectorAll('[data-split]')) splitWords(el);
   for (const el of document.querySelectorAll('[data-i18n-alt]')) el.alt = t(el.dataset.i18nAlt);
+  for (const el of document.querySelectorAll('[data-i18n-aria]')) el.setAttribute('aria-label', t(el.dataset.i18nAria));
   for (const el of document.querySelectorAll('[data-img-lang]')) el.src = el.dataset.imgLang.replace('{lang}', lang);
   for (const b of document.querySelectorAll('.lang button')) b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
   if (releases) renderReleases();
@@ -144,7 +145,7 @@ function updateFx() {
     const r = el.parentElement.getBoundingClientRect();
     if (r.bottom < -100 || r.top > vh + 100) continue;
     const p = (r.top + r.height / 2 - vh / 2) / vh;
-    el.style.transform = el.tagName === 'IMG' ? `translate3d(0, ${p * -48}px, 0) scale(1.08)` : `translate3d(0, ${p * -36}px, 0)`;
+    el.style.transform = el.tagName === 'IMG' ? `translate3d(0, ${p * -48}px, 0) scale(1.04)` : `translate3d(0, ${p * -36}px, 0)`;
   }
   for (const el of fx.parallax) {
     const r = el.parentElement.getBoundingClientRect();
@@ -187,7 +188,6 @@ function showFallback() {
   const img = document.querySelector('.sphere-fallback');
   img.hidden = false;
   document.getElementById('sphere').remove();
-  document.getElementById('drag-hint').remove();
 }
 
 const canvas = document.getElementById('sphere');
@@ -196,7 +196,6 @@ if (webglAvailable()) {
     .then(({ createSphere }) => createSphere(canvas, {
       reducedMotion,
       hero: document.getElementById('top'),
-      onFirstDrag: () => document.getElementById('drag-hint').classList.add('used'),
     }))
     .then(() => document.getElementById('top').classList.add('sphere-ready'))
     .catch((err) => { console.warn('Sphere failed to start', err); showFallback(); });
