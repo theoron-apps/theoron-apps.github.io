@@ -6,7 +6,9 @@ import { RoomEnvironment } from '../vendor/RoomEnvironment.js';
 const TILT = THREE.MathUtils.degToRad(23.4);
 const BASE_ROTATION = new THREE.Euler(0.32, -0.45, -0.38);
 
-export async function createSphere(canvas, { reducedMotion = false, hero } = {}) {
+// Options: centered/scale/fixedTime render a still, centred frame (used for avatars and previews);
+// onFirstDrag fires once when the visitor first turns the sphere.
+export async function createSphere(canvas, { reducedMotion = false, hero, centered = false, scale = 1, fixedTime = null, onFirstDrag = null } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   const weakDevice = (navigator.hardwareConcurrency || 8) <= 4;
   renderer.setPixelRatio(Math.min(devicePixelRatio, weakDevice ? 1.25 : 1.75));
@@ -103,10 +105,11 @@ export async function createSphere(canvas, { reducedMotion = false, hero } = {})
   }
   root.rotation.copy(BASE_ROTATION);
 
-  let time = 0, last = performance.now(), running = false, visible = true;
+  let time = fixedTime ?? 0, last = performance.now(), running = false, visible = true;
   const ease = (x) => 1 - Math.pow(1 - x, 3);
 
   // ---------------------------------------------------------------- layout
+  // The rig carries the position, so every rotation turns the sphere around its own centre.
   const layout = { x: 0, y: 0, scale: 1 };
   function resize() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -116,18 +119,56 @@ export async function createSphere(canvas, { reducedMotion = false, hero } = {})
     const viewH = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
     const viewW = viewH * camera.aspect;
     const wide = w / h > 1.1;
-    layout.x = wide ? Math.min(viewW * 0.22, 3.1) : 0;
-    layout.y = wide ? 0 : viewH * 0.25;
-    layout.scale = wide ? 1 : Math.min(0.62, viewW / 5.2);
+    if (centered) Object.assign(layout, { x: 0, y: 0, scale });
+    else Object.assign(layout, { x: wide ? Math.min(viewW * 0.22, 3.1) : 0, y: wide ? 0 : viewH * 0.25, scale: wide ? 1 : Math.min(0.62, viewW / 5.2) });
   }
   new ResizeObserver(() => { resize(); if (!running) render(); }).observe(canvas);
   resize();
 
   // ---------------------------------------------------------------- input
-  const pointer = { x: 0, y: 0 };
+  const parallax = { x: 0, y: 0, tx: 0, ty: 0 };
   if (!reducedMotion && matchMedia('(pointer: fine)').matches) {
-    addEventListener('pointermove', (e) => { pointer.x = e.clientX / innerWidth - 0.5; pointer.y = e.clientY / innerHeight - 0.5; }, { passive: true });
+    addEventListener('pointermove', (e) => { parallax.tx = e.clientX / innerWidth - 0.5; parallax.ty = e.clientY / innerHeight - 0.5; }, { passive: true });
   }
+
+  // Drag to turn the sphere, with a little inertia after letting go.
+  const drag = { yaw: 0, pitch: 0, vYaw: 0, vPitch: 0, active: false, id: null, x: 0, y: 0 };
+  const raycaster = new THREE.Raycaster(), ndc = new THREE.Vector2(), bounds = new THREE.Sphere();
+  function overSphere(e) {
+    const r = canvas.getBoundingClientRect();
+    ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    raycaster.setFromCamera(ndc, camera);
+    bounds.set(rig.position, 1.95 * root.scale.x);
+    return raycaster.ray.intersectsSphere(bounds);
+  }
+  if (fixedTime === null) {
+    canvas.addEventListener('pointerdown', (e) => {
+      if (!overSphere(e)) return;
+      Object.assign(drag, { active: true, id: e.pointerId, x: e.clientX, y: e.clientY, vYaw: 0, vPitch: 0 });
+      canvas.setPointerCapture(e.pointerId);
+      canvas.style.cursor = 'grabbing';
+      if (onFirstDrag) { onFirstDrag(); onFirstDrag = null; }
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (!drag.active) { if (e.pointerType === 'mouse') canvas.style.cursor = overSphere(e) ? 'grab' : ''; return; }
+      if (e.pointerId !== drag.id) return;
+      drag.vYaw = (e.clientX - drag.x) * 0.006;
+      drag.vPitch = (e.clientY - drag.y) * 0.004;
+      drag.yaw += drag.vYaw;
+      drag.pitch = THREE.MathUtils.clamp(drag.pitch + drag.vPitch, -0.9, 0.9);
+      drag.x = e.clientX; drag.y = e.clientY;
+      if (!running) render();
+    });
+    const release = (e) => {
+      if (!drag.active || e.pointerId !== drag.id) return;
+      drag.active = false;
+      canvas.style.cursor = e.pointerType === 'mouse' && overSphere(e) ? 'grab' : '';
+      if (reducedMotion) { drag.vYaw = drag.vPitch = 0; }
+    };
+    canvas.addEventListener('pointerup', release);
+    canvas.addEventListener('pointercancel', release);
+  }
+
   let scroll = 0;
   const stage = canvas.parentElement;
   function onScroll() {
@@ -136,23 +177,25 @@ export async function createSphere(canvas, { reducedMotion = false, hero } = {})
     stage.style.opacity = String(1 - scroll * 0.75);
     if (!running) render();
   }
-  addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  if (fixedTime === null) { addEventListener('scroll', onScroll, { passive: true }); onScroll(); }
 
   // ---------------------------------------------------------------- loop
-
   function render() {
-    const intro = reducedMotion ? 1 : ease(Math.min(1, time / 2.4));
-    const s = layout.scale * (0.86 + 0.14 * intro);
-    root.scale.setScalar(s);
-    root.position.set(layout.x, layout.y + scroll * 0.9, 0);
+    const intro = reducedMotion || fixedTime !== null ? 1 : ease(Math.min(1, time / 2.4));
+    root.scale.setScalar(layout.scale * (0.86 + 0.14 * intro));
+    rig.position.set(layout.x, layout.y + scroll * 0.9, 0);
     root.rotation.x = BASE_ROTATION.x + scroll * 0.5;
     spin.rotation.y = time * 0.12 + scroll * 1.2 - (1 - intro) * 1.4;
     orbit.rotation.y = -time * 0.45;
     ecliptic.rotation.z = TILT + scroll * 0.35;
     meridian.rotation.y = Math.sin(time * 0.15) * 0.08;
-    rig.rotation.y += (pointer.x * 0.35 - rig.rotation.y) * 0.05;
-    rig.rotation.x += (pointer.y * 0.2 - rig.rotation.x) * 0.05;
+    if (!drag.active) { // inertia
+      drag.yaw += drag.vYaw; drag.pitch = THREE.MathUtils.clamp(drag.pitch + drag.vPitch, -0.9, 0.9);
+      drag.vYaw *= 0.94; drag.vPitch *= 0.9;
+    }
+    parallax.x += (parallax.tx - parallax.x) * 0.05;
+    parallax.y += (parallax.ty - parallax.y) * 0.05;
+    rig.rotation.set(parallax.y * 0.2 + drag.pitch, parallax.x * 0.35 + drag.yaw, 0, 'YXZ');
     renderer.render(scene, camera);
   }
 
@@ -164,7 +207,7 @@ export async function createSphere(canvas, { reducedMotion = false, hero } = {})
     requestAnimationFrame(frame);
   }
   function setRunning(on) {
-    on = on && !reducedMotion && visible && !document.hidden;
+    on = on && !reducedMotion && fixedTime === null && visible && !document.hidden;
     if (on === running) return;
     running = on;
     if (on) { last = performance.now(); requestAnimationFrame(frame); }
@@ -178,6 +221,7 @@ export async function createSphere(canvas, { reducedMotion = false, hero } = {})
   render();
   canvas.classList.add('ready');
   setRunning(true);
+  return { render };
 }
 
 // The ecliptic band: graduations along both edges and "ΘΕΩΡΩΝ" engraved twice around.

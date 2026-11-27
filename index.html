@@ -27,6 +27,7 @@
 <a class="skip" href="#main" data-i18n="nav.skip">Skip to content</a>
 
 <header class="nav" id="nav">
+  <div class="progress" id="progress" aria-hidden="true"></div>
   <div class="wrap nav-in">
     <a class="logo" href="#top" aria-label="Theoron">Theoron<i></i></a>
     <nav class="nav-links" aria-label="Sections">
@@ -71,20 +72,26 @@
       <a class="btn btn-ghost btn-lg" href="https://github.com/theoron-apps"><span data-i18n="hero.github">View on GitHub</span>&nbsp;→</a>
     </div>
   </div>
+  <div class="drag-hint" id="drag-hint" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0 1 13.2-4.9M19.5 12a7.5 7.5 0 0 1-13.2 4.9M18 3.5v3.8h-3.8M6 20.5v-3.8h3.8"/></svg>
+    <span data-i18n="hero.drag">Drag to turn the sphere</span>
+  </div>
   <div class="hero-mark" aria-hidden="true">θεωρῶν</div>
 </section>
 
 <!-- ============================================================ apps -->
 <section class="section" id="apps">
+  <div class="glow" data-parallax="-0.12" style="top: 6%; left: -260px" aria-hidden="true"></div>
+  <div class="glow" data-parallax="0.1" style="top: 58%; right: -300px" aria-hidden="true"></div>
   <div class="wrap">
     <header class="sec-head" data-reveal>
       <p class="eyebrow" data-i18n="apps.eyebrow">Apps</p>
-      <h2 data-i18n="apps.title">Three apps, made slowly.</h2>
+      <h2 data-split data-i18n="apps.title">Three apps, made slowly.</h2>
       <p class="sec-lead" data-i18n="apps.lead">Small, focused tools that feel like they came with your Mac. Each one does a single thing, and does it beautifully.</p>
     </header>
 
     <!-- NotchIsland -->
-    <article class="app" id="notchisland" data-reveal>
+    <article class="app spot" id="notchisland" data-reveal>
       <div class="app-stage">
         <img data-img-lang="assets/img/notchisland-{lang}.jpg" src="assets/img/notchisland-en.jpg" width="1600" height="747" loading="lazy" decoding="async" alt="NotchIsland playing music in the MacBook notch" data-i18n-alt="notch.alt">
       </div>
@@ -115,14 +122,14 @@
     </article>
 
     <!-- Outputs -->
-    <article class="app" id="outputs" data-reveal>
+    <article class="app spot" id="outputs" data-reveal>
       <div class="app-stage">
         <div class="patch" aria-hidden="true">
           <svg viewBox="0 0 2400 1120" preserveAspectRatio="none">
-            <path class="cable" d="M800 560 C1120 690 1290 210 1584 206"/>
-            <path class="cable" d="M800 560 C1120 640 1290 450 1584 441"/>
-            <path class="cable" d="M800 560 C1120 600 1290 700 1584 677"/>
-            <path class="cable" d="M800 560 C1010 760 1180 1060 1330 1010"/>
+            <path class="cable" pathLength="1" d="M800 560 C1120 690 1290 210 1584 206"/>
+            <path class="cable" pathLength="1" d="M800 560 C1120 640 1290 450 1584 441"/>
+            <path class="cable" pathLength="1" d="M800 560 C1120 600 1290 700 1584 677"/>
+            <path class="cable" pathLength="1" d="M800 560 C1010 760 1180 1060 1330 1010"/>
             <circle cx="1330" cy="1010" r="13" fill="#2a2d2d" stroke="rgba(242,241,236,.35)" stroke-width="3"/>
             <path class="pulse" d="M800 560 C1120 690 1290 210 1584 206"/>
             <path class="pulse" d="M800 560 C1120 640 1290 450 1584 441"/>
@@ -164,7 +171,7 @@
     </article>
 
     <!-- Conversio -->
-    <article class="app" id="conversio" data-reveal>
+    <article class="app spot" id="conversio" data-reveal>
       <div class="app-stage">
         <img data-img-lang="assets/img/conversio-{lang}.jpg" src="assets/img/conversio-en.jpg" width="1600" height="747" loading="lazy" decoding="async" alt="The Conversio game library on a Mac" data-i18n-alt="conversio.alt">
       </div>
@@ -202,7 +209,7 @@
   <div class="wrap">
     <header class="sec-head" data-reveal>
       <p class="eyebrow" data-i18n="rel.eyebrow">Releases</p>
-      <h2 data-i18n="rel.title">Fresh from the workshop.</h2>
+      <h2 data-split data-i18n="rel.title">Fresh from the workshop.</h2>
       <p class="sec-lead" data-i18n="rel.lead">Every app updates itself, but here is what changed lately.</p>
     </header>
     <ol class="releases-list" id="release-list" data-reveal></ol>
@@ -210,25 +217,28 @@
   </div>
 </section>
 
+<div class="marquee" aria-hidden="true"><div class="marquee-track" data-marquee><span class="">NotchIsland</span><i>✦</i><span class="o">θεωρῶν</span><i>✦</i><span class="">Outputs</span><i>✦</i><span class="o">Conversio</span><i>✦</i><span class="">NotchIsland</span><i>✦</i><span class="o">θεωρῶν</span><i>✦</i><span class="">Outputs</span><i>✦</i><span class="o">Conversio</span><i>✦</i><span class="">NotchIsland</span><i>✦</i><span class="o">θεωρῶν</span><i>✦</i><span class="">Outputs</span><i>✦</i><span class="o">Conversio</span><i>✦</i><span class="">NotchIsland</span><i>✦</i><span class="o">θεωρῶν</span><i>✦</i><span class="">Outputs</span><i>✦</i><span class="o">Conversio</span><i>✦</i></div></div>
+
 <!-- ============================================================ principles -->
 <section class="section" id="principles">
+  <div class="glow" data-parallax="-0.1" style="top: 10%; right: -280px" aria-hidden="true"></div>
   <div class="wrap">
     <header class="sec-head" data-reveal>
       <p class="eyebrow" data-i18n="pr.eyebrow">Principles</p>
-      <h2 data-i18n="pr.title">What we care about.</h2>
+      <h2 data-split data-i18n="pr.title">What we care about.</h2>
     </header>
     <div class="principles-grid">
-      <article class="principle" data-reveal>
+      <article class="principle spot" data-reveal>
         <div class="num" aria-hidden="true">I</div>
         <h3 data-i18n="pr.1.t">Native</h3>
         <p data-i18n="pr.1.d">Built with Apple's own frameworks. No web wrappers and no heavy dependencies: apps that feel at home on a Mac and start in an instant.</p>
       </article>
-      <article class="principle" data-reveal>
+      <article class="principle spot" data-reveal>
         <div class="num" aria-hidden="true">II</div>
         <h3 data-i18n="pr.2.t">Private</h3>
         <p data-i18n="pr.2.d">No analytics, no accounts, no tracking. Your data stays on your device. Even this website loads nothing from third parties.</p>
       </article>
-      <article class="principle" data-reveal>
+      <article class="principle spot" data-reveal>
         <div class="num" aria-hidden="true">III</div>
         <h3 data-i18n="pr.3.t">Crafted</h3>
         <p data-i18n="pr.3.d">Animations, sound and haptics are designed with care: the small details you feel long before you notice them.</p>
@@ -240,18 +250,19 @@
 <!-- ============================================================ support -->
 <section class="section" id="support">
   <div class="wrap">
-    <div class="support-card" data-reveal>
+    <div class="support-card spot" data-reveal>
       <div>
         <p class="eyebrow" data-i18n="sup.eyebrow">Support</p>
-        <h2 data-i18n="sup.title">Made by an independent studio.</h2>
+        <h2 data-split data-i18n="sup.title">Made by an independent studio.</h2>
         <p class="sup-text" data-i18n="sup.text">No investors, no ads, no subscriptions. If our apps make your Mac a little better, you can support the work. It lets us spend more time on the details.</p>
         <div class="cta">
-          <a class="btn btn-solid btn-lg" href="https://send.monobank.ua/jar/2jGp4yDQPd"><span class="heart" aria-hidden="true">♥</span>&nbsp;<span data-i18n="sup.button">Support Theoron</span></a>
+          <a class="btn btn-solid btn-lg" href="https://send.monobank.ua/jar/2jGp4yDQPd"><span class="heart" aria-hidden="true">♥</span><span data-i18n="sup.button">Support Theoron</span></a>
           <a class="btn btn-glass btn-lg" href="https://t.me/TheoronApps">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.4 4.3 18.2 19.5c-.24 1.06-.87 1.32-1.76.82l-4.86-3.58-2.34 2.25c-.26.26-.48.48-.98.48l.35-4.95 9-8.13c.39-.35-.09-.54-.6-.2L5.88 13.2 1.1 11.7c-1.04-.33-1.06-1.04.22-1.54L20.03 2.95c.87-.32 1.63.2 1.37 1.35Z"/></svg>
             Telegram
           </a>
         </div>
+        <p class="sup-note" data-i18n="sup.note">Support goes through Ukrainian banks: a monobank jar.</p>
       </div>
       <div class="support-orbit" aria-hidden="true"><i></i><i></i><i></i><b></b><em></em></div>
     </div>
