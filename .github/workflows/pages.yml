@@ -1,6 +1,9 @@
 # Builds and deploys the site to GitHub Pages, refreshing data/releases.json
 # from the GitHub API first (visitors' browsers never call the API).
 #
+# Every push deploys. Every 15 minutes a quick check looks for new app releases
+# and deploys only when there are some, so versions on the site follow releases.
+#
 # Requires the repository's Pages source to be "GitHub Actions":
 # Settings → Pages → Build and deployment → Source → GitHub Actions.
 
@@ -10,7 +13,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '17 */6 * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -18,13 +21,39 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
-  deploy:
+  # Scheduled runs only: is there anything new to show?
+  check:
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.compare.outputs.changed }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch latest releases
+        run: node scripts/fetch-releases.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compare with the live site
+        id: compare
+        run: node scripts/releases-changed.mjs
+
+  deploy:
+    needs: check
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.check.outputs.changed == 'true') }}
+    runs-on: ubuntu-latest
+    # one deploy at a time; checks may run alongside
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
