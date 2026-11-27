@@ -1,5 +1,6 @@
 // A small working model of NotchIsland: the island expands on click, plays music,
 // swipes between pages and shows live activities, like the real app does.
+import { t, onLangChange } from './lang.js';
 
 const TRACKS = [
   { title: 'Golden Hour Drive', artist: 'Neon Coast', length: 213, colors: ['#f9b15f', '#ef8657', '#c94f69'], sun: '#fff3cf' },
@@ -12,6 +13,8 @@ const TIMER_SECONDS = 30;
 const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const rand = (a, b) => a + Math.random() * (b - a);
 
+// Returns a small controller, so a page can also drive the island itself (the NotchIsland page
+// does, scene by scene). tryBar, the row of buttons that trigger activities, is optional.
 export function initIsland(scene, tryBar, { reducedMotion = false } = {}) {
   const screen = scene.querySelector('.screen');
   const isl = scene.querySelector('#island');
@@ -180,36 +183,64 @@ export function initIsland(scene, tryBar, { reducedMotion = false } = {}) {
   bindBar(isl.querySelector('[data-vol]'), (k) => { vol.style.width = `${k * 100}%`; });
 
   // ---------------------------------------------------------------- stats
+  // Fans: scroll over the fan ring to set a speed limit in 100 rpm steps, from Auto down to
+  // silence, like the real app. Scrolling back up past the top returns them to Auto.
+  const FAN_TOP = 2000;
+  let fanLimit = null;
+  const autoRpm = () => Math.round(stats.fans.v * 26.5);
+  const fanRpm = () => (fanLimit === null ? autoRpm() : Math.min(autoRpm(), fanLimit));
   const stats = {
     cpu: { v: 9, min: 4, max: 28, sub: (v) => `${Math.round(50 + v / 4)} °C` },
     mem: { v: 71, min: 68, max: 75, sub: (v) => `${(24 * v / 100).toFixed(1)} / 24 GB` },
     gpu: { v: 0, min: 0, max: 14, sub: (v) => `${Math.round(45 + v / 3)} °C` },
     disk: { v: 34, min: 34, max: 34, sub: () => '614 GB' },
-    fans: { v: 55, min: 50, max: 62, sub: (v) => `${Math.round(v * 26.5)} rpm`, label: (v) => `${(v * 26.5 / 1000).toFixed(1)}k` },
+    fans: { v: 55, min: 50, max: 62, fill: () => fanRpm() / 26.5, label: () => `${(fanRpm() / 1000).toFixed(1)}k`,
+      sub: () => (fanLimit === null ? t('isl.auto') : fanLimit === 0 ? t('isl.silent') : `≤ ${fanLimit}`) },
   };
-  function updateStats() {
+  function updateStats(drift = true) {
     for (const [key, s] of Object.entries(stats)) {
-      s.v = Math.min(s.max, Math.max(s.min, s.v + rand(-4, 4)));
+      if (drift) s.v = Math.min(s.max, Math.max(s.min, s.v + rand(-4, 4)));
+      const fill = s.fill ? s.fill(s.v) : s.v;
       const ring = isl.querySelector(`[data-stat="${key}"]`);
-      ring.querySelector('.rv').style.strokeDasharray = `${s.v.toFixed(1)} 100`;
+      ring.querySelector('.rv').style.strokeDasharray = `${fill.toFixed(1)} 100`;
       ring.querySelector('.rn').textContent = s.label ? s.label(s.v) : `${Math.round(s.v)}%`;
       ring.querySelector('.rs').textContent = s.sub(s.v);
     }
-    $('.rnet').textContent = `${Math.round(rand(1, 40))} KB/s`;
-    $('.rw').textContent = `${Math.round(rand(18, 32))} W`;
+    if (drift) {
+      $('.rnet').textContent = `${Math.round(rand(1, 40))} KB/s`;
+      $('.rw').textContent = `${Math.round(rand(18, 32))} W`;
+    }
   }
   setInterval(() => { if (state === 'expanded' && page === 1) updateStats(); }, 1600);
+  onLangChange(() => updateStats(false));
+
+  const fanRing = isl.querySelector('[data-stat="fans"]');
+  let fanAcc = 0;
+  fanRing.addEventListener('wheel', (e) => {
+    if (state !== 'expanded' || page !== 1) return;
+    e.preventDefault();
+    e.stopPropagation(); // the page must not turn while the fans are being set
+    fanAcc += e.deltaY;
+    if (Math.abs(fanAcc) < 40 && Math.abs(e.deltaY) < 40) return;
+    const down = fanAcc > 0;
+    fanAcc = 0;
+    if (down) fanLimit = Math.max(0, fanLimit === null ? Math.floor(autoRpm() / 100) * 100 : fanLimit - 100);
+    else if (fanLimit !== null) fanLimit = fanLimit + 100 > FAN_TOP ? null : fanLimit + 100;
+    fanRing.style.setProperty('--c', fanLimit === null ? '#30d158' : '#64d2ff');
+    updateStats(false);
+  }, { passive: false });
 
   // ---------------------------------------------------------------- timer
-  const timerBtn = tryBar.querySelector('[data-try="timer"]');
+  const timerBtn = tryBar?.querySelector('[data-try="timer"]');
   const ring = scene.querySelector('.tb-ring');
   const timer = {
-    left: 0, tick: null,
-    start() {
-      this.left = TIMER_SECONDS;
+    left: 0, total: TIMER_SECONDS, tick: null,
+    start(seconds = TIMER_SECONDS) {
+      this.stop();
+      this.total = this.left = seconds;
       this.draw();
       screen.dataset.timer = 'on';
-      timerBtn.setAttribute('aria-pressed', 'true');
+      timerBtn?.setAttribute('aria-pressed', 'true');
       this.tick = setInterval(() => {
         this.left--;
         this.draw();
@@ -221,9 +252,9 @@ export function initIsland(scene, tryBar, { reducedMotion = false } = {}) {
       clearInterval(this.tick);
       this.tick = null;
       delete screen.dataset.timer;
-      timerBtn.setAttribute('aria-pressed', 'false');
+      timerBtn?.setAttribute('aria-pressed', 'false');
     },
-    draw() { ring.style.strokeDasharray = `${(this.left / TIMER_SECONDS) * 100} 100`; },
+    draw() { ring.style.strokeDasharray = `${(this.left / this.total) * 100} 100`; },
   };
 
   // ---------------------------------------------------------------- input
@@ -239,7 +270,7 @@ export function initIsland(scene, tryBar, { reducedMotion = false } = {}) {
     if (state === 'expanded' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) setPage(page + (e.key === 'ArrowRight' ? 1 : -1));
   });
 
-  tryBar.addEventListener('click', (e) => {
+  tryBar?.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-try]');
     if (!btn) return;
     const what = btn.dataset.try;
@@ -253,4 +284,18 @@ export function initIsland(scene, tryBar, { reducedMotion = false } = {}) {
   applyTrack();
   setState('compact');
   setPage(0);
+
+  return {
+    get state() { return state; },
+    expand, collapse, setPage,
+    activity,
+    agent: () => agent.start(),
+    approve: () => agent.approve(),
+    timer: (on = true, seconds) => (on ? timer.start(seconds) : timer.stop()),
+    /** Camera and microphone indicators beside the island. */
+    indicators(on) { if (on) screen.dataset.cam = 'on'; else delete screen.dataset.cam; },
+    /** Back to the quiet compact island: no activity, no timer, no indicators. */
+    reset() { clearActivity(); timer.stop(); delete screen.dataset.cam; setState('compact'); },
+    playing: (on) => setPlaying(on),
+  };
 }

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en" class="no-js" data-title-key="ni.meta.title" data-desc-key="ni.meta.description">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NotchIsland — Dynamic Island for MacBooks with a notch</title>
+<meta name="description" content="NotchIsland turns the MacBook notch into a living island: music from any player, AI coding agents, notifications, activities, stats and a fan speed limit.">
+<meta name="theme-color" content="#050606">
+<link rel="canonical" href="https://theoron-apps.github.io/notchisland/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Theoron">
+<meta property="og:title" content="NotchIsland — Dynamic Island for MacBooks with a notch">
+<meta property="og:description" content="Music, AI agents, notifications, activities and stats, right in the MacBook notch.">
+<meta property="og:url" content="https://theoron-apps.github.io/notchisland/">
+<meta property="og:image" content="https://theoron-apps.github.io/assets/img/og-notchisland.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="preload" href="/assets/fonts/eb-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/notchisland.css">
+<script>document.documentElement.classList.replace('no-js', 'js');</script>
+</head>
+<body class="ni">
+<a class="skip" href="#main" data-i18n="nav.skip">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <div class="wrap nav-in">
+    <div class="crumbs">
+      <a class="logo" href="/" aria-label="Theoron">Theoron<i></i></a>
+      <a class="crumb" href="#top">NotchIsland</a>
+    </div>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#music" data-i18n="ni.nav.music">Music</a>
+      <a href="#agents" data-i18n="ni.nav.agents">AI agents</a>
+      <a href="#stats" data-i18n="ni.nav.stats">Stats</a>
+      <a href="#more" data-i18n="ni.nav.more">More</a>
+    </nav>
+    <div class="nav-end">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="uk" aria-pressed="false">UK</button>
+        <button type="button" data-lang="ru" aria-pressed="false">RU</button>
+      </div>
+      <a class="btn btn-solid btn-sm" href="#get" data-i18n="app.download">Download</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div class="ni-flow">
+
+  <!-- The MacBook stays on stage while the scenes change; product.js drives the island and the camera. -->
+  <div class="ni-stage" data-shot="top">
+    <div class="ni-cam">
+      <div class="ni-device">
+        <div class="notch-scene" role="group" aria-label="A MacBook screen with NotchIsland. Click the island to open it." data-i18n-aria="ni.stage" data-notch-scene></div>
+      </div>
+      <div class="ni-base" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ hero -->
+  <section class="ni-scene ni-hero" id="top" data-scene="top">
+    <div class="wrap">
+      <div class="ni-copy" data-reveal>
+        <a class="pill" data-notes="NotchIsland" href="https://github.com/theoron-apps/NotchIsland/releases/latest">
+          <span class="dot" aria-hidden="true"></span>
+          <span><strong data-version="NotchIsland">v6.1</strong> · <span data-i18n="ni.pill">See what’s new</span></span>
+          <span aria-hidden="true">›</span>
+        </a>
+        <div class="ni-title">
+          <img src="/assets/img/notchisland-icon.png" width="88" height="88" alt="">
+          <h1>NotchIsland</h1>
+        </div>
+        <p class="ni-tag" data-i18n="notch.tag">Dynamic Island for MacBooks with a notch</p>
+        <p class="lead" data-i18n="notch.desc">Your notch becomes a living island: music, notifications, timers, files and your coding agents, right where your eyes already are.</p>
+        <div class="cta">
+          <a class="btn btn-solid btn-lg" data-download="NotchIsland" href="https://github.com/theoron-apps/NotchIsland/releases/latest">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M8 2v8.5M4 7l4 4 4-4M2.5 14h11"/></svg>
+            <span data-i18n="app.download">Download</span>
+          </a>
+          <a class="btn btn-ghost btn-lg" href="https://github.com/theoron-apps/NotchIsland">GitHub&nbsp;→</a>
+        </div>
+        <p class="app-meta"><span data-version="NotchIsland">v6.1</span><span>macOS 15+</span><span data-i18n="ni.req">MacBook with a notch</span></p>
+      </div>
+    </div>
+    <p class="ni-hint" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 7v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-i18n="ni.hint">Scroll to explore</span></p>
+  </section>
+
+  <!-- ============================================================ music -->
+  <section class="ni-scene" id="music" data-scene="music">
+    <div class="wrap">
+      <div class="ni-copy" data-reveal>
+        <p class="eyebrow"><b>01</b><span data-i18n="ni.music.eyebrow">Music</span></p>
+        <h2 data-split data-i18n="ni.music.title">Every song, right in the notch.</h2>
+        <p class="ni-text" data-i18n="ni.music.text">Music and video from any player, not just Apple Music and Spotify: YouTube in Safari, Chrome and Brave, podcasts, VLC, IINA, Telegram songs, even FL Studio while it plays.</p>
+        <ul class="ni-list">
+          <li data-i18n-html="ni.music.l1"><b>Controls in the island</b>: title, time, seeking, play and skip.</li>
+          <li data-i18n-html="ni.music.l2"><b>A live equalizer</b> in four styles that reacts to real sound, and a glow around the island.</li>
+          <li data-i18n-html="ni.music.l3"><b>The video frame</b> and channel with the NotchIsland browser extension.</li>
+        </ul>
+        <p class="ni-try" data-i18n="ni.music.try">Go ahead: play, skip and seek.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ agents -->
+  <section class="ni-scene" id="agents" data-scene="agents">
+    <div class="wrap">
+      <div class="ni-copy" data-reveal>
+        <p class="eyebrow"><b>02</b><span data-i18n="ni.agents.eyebrow">AI agents</span></p>
+        <h2 data-split data-i18n="ni.agents.title">Your coding agents, at a glance.</h2>
+        <p class="ni-text" data-i18n="ni.agents.text">See what Claude Code, Codex, Cursor and Antigravity are doing while you work in another window.</p>
+        <ul class="ni-list">
+          <li data-i18n-html="ni.agents.l1"><b>At work</b>: the project and the current action, right under the notch.</li>
+          <li data-i18n-html="ni.agents.l2"><b>Waiting for you</b>: the notch pulses and taps the trackpad when an agent needs permission.</li>
+          <li data-i18n-html="ni.agents.l3"><b>Agents Office</b>: a cutaway room where every agent sits at its project’s desk.</li>
+          <li data-i18n-html="ni.agents.l4"><b>Limits</b> for Claude, Codex and Cursor, with reset times and warnings.</li>
+        </ul>
+        <p class="ni-try" data-i18n="ni.agents.try">When it asks, click the island to approve.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ notifications -->
+  <section class="ni-scene" id="notifications" data-scene="notifications">
+    <div class="wrap">
+      <div class="ni-copy" data-reveal>
+        <p class="eyebrow"><b>03</b><span data-i18n="ni.notify.eyebrow">Notifications</span></p>
+        <h2 data-split data-i18n="ni.notify.title">Small news, in the right place.</h2>
+        <p class="ni-text" data-i18n="ni.notify.text">The island tells you what just happened, then shrinks back into the notch.</p>
+        <ul class="ni-chips">
+          <li data-chip="charging" data-i18n="ni.notify.c1">Charging</li>
+          <li data-chip="airpods" data-i18n="ni.notify.c2">AirPods and Bluetooth</li>
+          <li data-i18n="ni.notify.c3">Network and VPN</li>
+          <li data-i18n="ni.notify.c4">Another Mac over Thunderbolt</li>
+          <li data-i18n="ni.notify.c5">High temperature</li>
+          <li data-i18n="ni.notify.c6">Bright screen on battery</li>
+          <li data-i18n="ni.notify.c7">Volume</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ activities -->
+  <section class="ni-scene" id="activities" data-scene="activities">
+    <div class="wrap">
+      <div class="ni-copy" data-reveal>
+        <p class="eyebrow"><b>04</b><span data-i18n="ni.act.eyebrow">Activities</span></p>
+        <h2 data-split data-i18n="ni.act.title">Up to three things at once.</h2>
+        <p class="ni-text" data-i18n="ni.act.text">A timer, Keep Awake, camera and microphone indicators and calls stay beside the island, in one of six styles.</p>
+        <ul class="ni-list">
+          <li data-i18n-html="ni.act.l1"><b>Timer</b> with a ring that empties as time runs out.</li>
+          <li data-i18n-html="ni.act.l2"><b>Keep Awake</b>: your Mac stays awake for as long as you need.</li>
+          <li data-i18n-html="ni.act.l3"><b>Camera and microphone</b>: always know when they are on.</li>
+        </ul>
+        <p class="ni-try ni-tip" data-i18n="ni.act.try">In the app, right-click the island for a quick menu: timer, Keep Awake, shelf and more.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ stats -->
+  <section class="ni-scene" id="stats" data-scene="stats">
+    <div class="wrap">
+      <div class="ni-copy" data-reveal>
+        <p class="eyebrow"><b>05</b><span data-i18n="ni.stats.eyebrow">Stats and battery</span></p>
+        <h2 data-split data-i18n="ni.stats.title">Your Mac’s vital signs, one swipe away.</h2>
+        <p class="ni-text" data-i18n="ni.stats.text">CPU, memory, GPU, disk, network, temperatures, power draw in watts and screen brightness in nits. Click Memory to see what is using it, and quit apps right from the island.</p>
+        <div class="ni-fan spot">
+          <span class="ni-badge" data-i18n="ni.stats.badge">New in 6.1</span>
+          <h3 data-i18n="ni.stats.fan">Fan speed limit</h3>
+          <p data-i18n="ni.stats.fanText">Hover over the fan ring and scroll: 100 rpm steps, from Auto down to full silence. Above a temperature you choose, the fans go back to automatic on their own.</p>
+          <small data-i18n="ni.stats.fanNote">Apple silicon Macs with fans.</small>
+        </div>
+        <p class="ni-try" data-i18n="ni.stats.try">Try it here: hover over the Fans ring and scroll.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ more -->
+  <section class="ni-scene ni-more" id="more" data-scene="more">
+    <div class="wrap">
+      <div class="ni-copy" data-reveal>
+        <p class="eyebrow"><b>06</b><span data-i18n="ni.more.eyebrow">And more</span></p>
+        <h2 data-split data-i18n="ni.more.title">Everything in its place.</h2>
+        <div class="ni-cards">
+          <article class="ni-card spot">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13.5h5l1.6 2.5h4.8l1.6-2.5h5M3 13.5 5.6 6h12.8l2.6 7.5V19H3z"/></svg>
+            <h3 data-i18n="ni.more.shelf">Shelf</h3>
+            <p data-i18n="ni.more.shelfText">A file tray with AirDrop, conversion and PDF password removal, clipboard history and a quick note.</p>
+          </article>
+          <article class="ni-card spot">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.4"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1.4"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1.4"/><path d="M14 14h3v3M20.5 14v6.5H17M14 20.5h.01"/></svg>
+            <h3 data-i18n="ni.more.qr">QR scanner</h3>
+            <p data-i18n="ni.more.qrText">Finds QR codes on your screen and offers the right action: open a link, join Wi‑Fi, add a contact.</p>
+          </article>
+          <article class="ni-card spot">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9.5" cy="12" r="2"/><circle cx="14.5" cy="12" r="2"/><path d="M5.5 8.5 3 12l2.5 3.5M18.5 8.5 21 12l-2.5 3.5"/></svg>
+            <h3 data-i18n="ni.more.gest">Gestures</h3>
+            <p data-i18n="ni.more.gestText">Swipe with two fingers to switch pages or tuck the island into the notch, with trackpad haptics.</p>
+          </article>
+          <article class="ni-card spot">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3.5c.5 4.4 2.5 6.4 7 7-4.5.6-6.5 2.6-7 7-.5-4.4-2.5-6.4-7-7 4.5-.6 6.5-2.6 7-7ZM18.5 15c.2 1.8.9 2.6 2.5 2.8-1.6.2-2.3 1-2.5 2.7-.2-1.7-.9-2.5-2.5-2.7 1.6-.2 2.3-1 2.5-2.8Z"/></svg>
+            <h3 data-i18n="ni.more.tour">Tour and What’s New</h3>
+            <p data-i18n="ni.more.tourText">A short tour on first launch, and what’s new right in the island after every update.</p>
+          </article>
+          <article class="ni-card spot">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4v4h-4"/></svg>
+            <h3 data-i18n="ni.more.upd">Updates</h3>
+            <p data-i18n="ni.more.updText">The island checks for new versions and tells you when one is out.</p>
+          </article>
+          <article class="ni-card spot">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>
+            <h3 data-i18n="ni.more.priv">Private</h3>
+            <p data-i18n="ni.more.privText">No analytics. Clipboard history, notes and settings stay on your Mac.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============================================================ download -->
+<section class="ni-scene ni-get" id="get" data-scene="get">
+  <div class="wrap">
+    <div class="ni-copy" data-reveal>
+      <img class="ni-get-icon" src="/assets/img/notchisland-icon.png" width="112" height="112" alt="">
+      <p class="eyebrow" data-i18n="ni.get.eyebrow">Download</p>
+      <h2 data-split data-i18n="ni.get.title">Get NotchIsland.</h2>
+      <p class="ni-text" data-i18n="ni.get.text">For MacBooks with a notch, on macOS 15 Sequoia or later. Other displays work too, as an option.</p>
+      <div class="cta">
+        <a class="btn btn-solid btn-lg" data-download="NotchIsland" href="https://github.com/theoron-apps/NotchIsland/releases/latest">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M8 2v8.5M4 7l4 4 4-4M2.5 14h11"/></svg>
+          <span data-i18n="app.download">Download</span><span class="ver" data-version="NotchIsland">v6.1</span>
+        </a>
+        <a class="btn btn-glass btn-lg" data-notes="NotchIsland" href="https://github.com/theoron-apps/NotchIsland/releases/latest"><span data-i18n="ni.get.notes">Release notes</span>&nbsp;↗</a>
+        <a class="btn btn-ghost btn-lg" href="https://github.com/theoron-apps/NotchIsland">GitHub&nbsp;→</a>
+      </div>
+      <p class="ni-steps-title" data-i18n="ni.get.steps">First launch</p>
+      <ol class="ni-steps">
+        <li data-i18n-html="ni.get.s1">Download the DMG and drag <b>NotchIsland</b> into <b>Applications</b>.</li>
+        <li data-i18n-html="ni.get.s2">Open it. macOS says it can’t verify the developer: click <b>Done</b>.</li>
+        <li data-i18n-html="ni.get.s3">Open <b>System Settings → Privacy &amp; Security</b> and scroll down to <b>Security</b>.</li>
+        <li data-i18n-html="ni.get.s4">Click <b>Open Anyway</b> and confirm with your password or Touch ID.</li>
+        <li data-i18n-html="ni.get.s5">Launch NotchIsland again. A short tour shows you around.</li>
+      </ol>
+      <p class="ni-why" data-i18n="ni.get.why">The app isn’t signed with a paid Apple Developer ID yet, so macOS asks you to confirm the first launch once.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================ footer -->
+<footer data-scene="get">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="/">Theoron<i></i></a>
+        <p class="motto" data-i18n="foot.motto">θεωρῶν — the one who contemplates</p>
+      </div>
+      <div>
+        <h4 data-i18n="nav.apps">Apps</h4>
+        <ul>
+          <li><a href="/notchisland/">NotchIsland</a></li>
+          <li><a href="/#outputs">Outputs</a></li>
+          <li><a href="/Conversio/">Conversio</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="foot.community">Community</h4>
+        <ul>
+          <li><a href="https://t.me/TheoronApps">Telegram</a></li>
+          <li><a href="https://github.com/theoron-apps/discussions" data-i18n="foot.discussions">Discussions</a></li>
+          <li><a href="https://github.com/theoron-apps">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Theoron</span>
+      <span data-i18n="foot.note">Made with care. No cookies, no trackers.</span>
+    </div>
+  </div>
+</footer>
+
+<nav class="scene-dots" aria-label="Sections">
+  <button type="button" data-go="0"><span>NotchIsland</span></button>
+  <button type="button" data-go="1"><span data-i18n="ni.music.eyebrow">Music</span></button>
+  <button type="button" data-go="2"><span data-i18n="ni.agents.eyebrow">AI agents</span></button>
+  <button type="button" data-go="3"><span data-i18n="ni.notify.eyebrow">Notifications</span></button>
+  <button type="button" data-go="4"><span data-i18n="ni.act.eyebrow">Activities</span></button>
+  <button type="button" data-go="5"><span data-i18n="ni.stats.eyebrow">Stats and battery</span></button>
+  <button type="button" data-go="6"><span data-i18n="ni.more.eyebrow">And more</span></button>
+  <button type="button" data-go="7"><span data-i18n="app.download">Download</span></button>
+</nav>
+
+<script type="module" src="/assets/js/product.js"></script>
+</body>
+</html>

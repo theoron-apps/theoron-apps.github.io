@@ -6,29 +6,29 @@ import Lenis from '../vendor/lenis.mjs';
 const STEP_MS = 1050;           // one transition
 const GESTURE_GAP = 200;        // a pause this long usually ends a wheel gesture
 
+// The deck comes from the page: every element with data-scene="name" is part of that scene,
+// in document order; elements that share a name (a section and the footer) show together.
+// data-scene-app marks a card that slides like the app cards on the studio page.
+// Each scene change is announced as a 'theoron:scene' event with { id, index }.
 export function initCinema({ reducedMotion }) {
   const root = document.documentElement;
   const nav = document.getElementById('nav');
   const progress = document.getElementById('progress');
   const dots = [...document.querySelectorAll('.scene-dots button')];
   const hero = document.getElementById('top');
-  const heroCopy = hero.querySelector('.hero-copy');
-  const heroStage = hero.querySelector('.hero-stage');
-  const apps = document.getElementById('apps');
-  const support = document.getElementById('support');
-  const footer = document.querySelector('footer');
+  const heroCopy = hero?.querySelector('.hero-copy');
+  const heroStage = hero?.querySelector('.hero-stage');
+  const footer = document.querySelector('footer[data-scene]');
 
-  // The deck, in order. Each scene is one or more elements shown together.
-  const scenes = [
-    { id: 'top', els: [hero] },
-    { id: 'apps', els: [apps.querySelector('.sec-head')] },
-    { id: 'notchisland', els: [document.getElementById('notchisland')], app: true },
-    { id: 'outputs', els: [document.getElementById('outputs')], app: true },
-    { id: 'conversio', els: [document.getElementById('conversio')], app: true },
-    { id: 'releases', els: [document.getElementById('releases')] },
-    { id: 'principles', els: [document.getElementById('principles')] },
-    { id: 'support', els: [support, footer] },
-  ];
+  const scenes = [];
+  for (const el of document.querySelectorAll('[data-scene]')) {
+    const id = el.dataset.scene;
+    let s = scenes.find((x) => x.id === id);
+    if (!s) scenes.push(s = { id, els: [], app: el.hasAttribute('data-scene-app') });
+    s.els.push(el);
+  }
+  if (!scenes.length) return;
+  const footScene = footer ? scenes.find((s) => s.els.includes(footer)) : null;
   const indexOf = (id) => scenes.findIndex((s) => s.id === id);
 
   // ---------------------------------------------------------------- smooth scroll for normal mode
@@ -85,7 +85,7 @@ export function initCinema({ reducedMotion }) {
       if (on) {
         lenis?.stop();
         // Clear what the scroll effects left behind; the scenes take over from here.
-        for (const el of [heroCopy, heroStage, ...document.querySelectorAll('.app-stage > img, .patch-icon, .glow, [data-marquee]')]) {
+        for (const el of [heroCopy, heroStage, ...document.querySelectorAll('.app-stage > img, .patch-icon, .glow, [data-marquee]')].filter(Boolean)) {
           el.style.transform = ''; el.style.opacity = '';
         }
         window.scrollTo({ top: 0, behavior: 'instant' });
@@ -110,13 +110,13 @@ export function initCinema({ reducedMotion }) {
   const avail = () => innerHeight - 96;
   function fit() {
     if (!on) return;
-    const footH = footer.offsetHeight;
-    support.style.setProperty('--foot-h', `${footH}px`);
+    const footH = footer ? footer.offsetHeight : 0;
+    footScene?.els[0].style.setProperty('--foot-h', `${footH}px`);
     for (const s of scenes) {
       const el = s.els[0];
       const target = s.app ? el : el.querySelector(':scope > .wrap');
       if (!target) continue;
-      const room = avail() - (s.app ? 24 : 0) - (s.id === 'support' ? footH : 0);
+      const room = avail() - (s.app ? 24 : 0) - (s === footScene ? footH : 0);
       const h = s.app ? el.offsetHeight : target.scrollHeight;
       el.style.setProperty('--fit', Math.min(1, room / Math.max(1, h)).toFixed(3));
     }
@@ -129,7 +129,7 @@ export function initCinema({ reducedMotion }) {
     const el = s.els[0];
     ro.observe(s.app ? el : (el.querySelector(':scope > .wrap') || el));
   }
-  ro.observe(footer);
+  if (footer) ro.observe(footer);
   document.fonts?.ready.then(queueFit);
 
   // ---------------------------------------------------------------- showing a scene
@@ -154,6 +154,7 @@ export function initCinema({ reducedMotion }) {
     progress.style.transform = `scaleX(${i / (scenes.length - 1)})`;
     nav.classList.toggle('scrolled', i > 0);
     dispatchEvent(new CustomEvent('theoron:hero', { detail: i === 0 }));
+    dispatchEvent(new CustomEvent('theoron:scene', { detail: { id: scenes[i].id, index: i } }));
     history.replaceState(null, '', i === 0 ? location.pathname + location.search : `#${scenes[i].id}`);
     // Keep keyboard focus with the visible scene, so Tab continues from there.
     if (focus || focusWasInside) scenes[i].els[0].focus({ preventScroll: true });
@@ -285,7 +286,7 @@ export function initCinema({ reducedMotion }) {
   addEventListener('hashchange', () => { if (on) { const i = indexOf(location.hash.slice(1)); if (i >= 0) show(i); } });
 
   // The hero copy rises in with a CSS animation on load; afterwards transitions take over.
-  setTimeout(() => heroCopy.classList.add('settled'), 1900);
+  if (heroCopy) setTimeout(() => heroCopy.classList.add('settled'), 1900);
 
   addEventListener('resize', setMode);
   query.addEventListener('change', setMode);

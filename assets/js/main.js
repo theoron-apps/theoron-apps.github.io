@@ -1,4 +1,5 @@
-import { dict, LANGS } from './i18n.js';
+import { t, currentLang, onLangChange, initLang } from './lang.js';
+import { renderNotchScenes } from './notch-scene.js';
 import { initIsland } from './island.js';
 import { initCinema } from './cinema.js';
 
@@ -8,50 +9,7 @@ const APPS = {
   Conversio: { icon: 'assets/img/conversio-icon.png', tag: 'conversio.tag', repo: 'theoron-apps/Conversio' },
 };
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-let lang = 'en';
 let releases = null;
-
-// ------------------------------------------------------------------ language
-function storedLang() {
-  try { return localStorage.getItem('theoron-lang'); } catch { return null; }
-}
-function pickLang() {
-  const fromUrl = new URLSearchParams(location.search).get('lang');
-  if (LANGS.includes(fromUrl)) return fromUrl;
-  const saved = storedLang();
-  if (LANGS.includes(saved)) return saved;
-  for (const l of navigator.languages || [navigator.language]) {
-    const code = (l || '').slice(0, 2).toLowerCase();
-    if (LANGS.includes(code)) return code;
-  }
-  return 'en';
-}
-const t = (key) => dict[lang][key] ?? dict.en[key] ?? '';
-
-function applyLang(next, { remember = false } = {}) {
-  lang = next;
-  document.documentElement.lang = lang;
-  document.title = t('meta.title');
-  document.querySelector('meta[name="description"]').setAttribute('content', t('meta.description'));
-  for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = t(el.dataset.i18n);
-  for (const el of document.querySelectorAll('[data-i18n-html]')) el.innerHTML = t(el.dataset.i18nHtml);
-  for (const el of document.querySelectorAll('[data-split]')) splitWords(el);
-  for (const el of document.querySelectorAll('[data-i18n-alt]')) el.alt = t(el.dataset.i18nAlt);
-  for (const el of document.querySelectorAll('[data-i18n-aria]')) el.setAttribute('aria-label', t(el.dataset.i18nAria));
-  for (const el of document.querySelectorAll('[data-img-lang]')) el.src = el.dataset.imgLang.replace('{lang}', lang);
-  for (const b of document.querySelectorAll('.lang button')) b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
-  if (releases) renderReleases();
-  if (remember) {
-    try { localStorage.setItem('theoron-lang', lang); } catch { /* private mode */ }
-    const url = new URL(location.href);
-    if (lang === 'en') url.searchParams.delete('lang'); else url.searchParams.set('lang', lang);
-    history.replaceState(null, '', url);
-  }
-}
-
-for (const b of document.querySelectorAll('.lang button')) {
-  b.addEventListener('click', () => applyLang(b.dataset.lang, { remember: true }));
-}
 
 // ------------------------------------------------------------------ releases
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -59,7 +17,7 @@ const version = (tag) => String(tag).replace(/^v/i, '');
 
 function formatDate(iso) {
   if (!iso) return '';
-  const locale = { en: 'en-GB', uk: 'uk-UA', ru: 'ru-RU' }[lang];
+  const locale = { en: 'en-GB', uk: 'uk-UA', ru: 'ru-RU' }[currentLang()];
   return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso));
 }
 
@@ -116,13 +74,6 @@ if ('IntersectionObserver' in window && !reducedMotion) {
   for (const el of document.querySelectorAll('[data-reveal]')) io.observe(el);
 } else {
   for (const el of document.querySelectorAll('[data-reveal]')) el.classList.add('in');
-}
-
-// ------------------------------------------------------------------ headings word by word
-function splitWords(el) {
-  let i = 0;
-  el.innerHTML = el.innerHTML.split(/(<br\s*\/?>)/).map((part) => part.startsWith('<br') ? part
-    : part.split(/(\s+)/).map((w) => (!w || /^\s+$/.test(w)) ? w : `<span class="w"><span style="--i: ${i++}">${w}</span></span>`).join('')).join('');
 }
 
 // ------------------------------------------------------------------ scroll effects
@@ -224,7 +175,9 @@ if (webglAvailable()) {
   showFallback();
 }
 
-applyLang(pickLang());
+renderNotchScenes();
+onLangChange(() => { if (releases) renderReleases(); });
+initLang();
 loadReleases();
 
 const notchScene = document.querySelector('.notch-scene');

@@ -241,11 +241,17 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(40px, 4.6vw, 
 .notch-scene .tb-bg, .notch-scene .tb-ring { fill: none; stroke-width: 4; }
 .notch-scene .tb-bg { stroke: rgba(255, 159, 10, .25); }
 .notch-scene .tb-ring { stroke: #ff9f0a; stroke-linecap: round; stroke-dasharray: 100 100; transition: stroke-dasharray 1s linear; }
+.notch-scene .cam-bubble { position: absolute; z-index: 2; top: 0; right: calc(50% + 10.2cqw); width: 4.4cqw; height: 3.4cqw; display: flex; align-items: center; justify-content: center; gap: .7cqw;
+  border-radius: 0 0 1.4cqw 1.4cqw; background: #000; opacity: 0; transform: translateX(3cqw) scale(.4); transition: opacity .3s, transform .55s var(--spring); pointer-events: none; }
+.notch-scene .screen[data-cam="on"][data-island="compact"] .cam-bubble { opacity: 1; transform: none; }
+.notch-scene .cam-bubble i { width: .8cqw; height: .8cqw; border-radius: 50%; background: #30d158; box-shadow: 0 0 .8cqw #30d158; }
+.notch-scene .cam-bubble .mic { background: #ff9f0a; box-shadow: 0 0 .8cqw #ff9f0a; }
 
 /* Expanded: three pages side by side */
 .notch-scene .pages { position: absolute; left: 2.6cqw; right: 2.6cqw; top: 4.2cqw; bottom: 2.7cqw; overflow: hidden; touch-action: pan-y; }
-.notch-scene .pages-track { display: flex; height: 100%; transform: translateX(calc(var(--page, 0) * -100%)); transition: transform .55s var(--ease); }
-.notch-scene .pg { flex: 0 0 100%; min-width: 0; }
+/* pages sit 4cqw apart, so the next page never shows at the edge when the island is scaled */
+.notch-scene .pages-track { display: flex; height: 100%; transform: translateX(calc(var(--page, 0) * (-100% - 4cqw))); transition: transform .55s var(--ease); }
+.notch-scene .pg { flex: 0 0 100%; min-width: 0; margin-right: 4cqw; }
 .notch-scene .dots { position: absolute; left: 0; right: 0; bottom: 1.1cqw; display: flex; justify-content: center; gap: .45cqw; }
 .notch-scene .dots button { position: relative; width: .5cqw; height: .5cqw; border-radius: 1cqw; background: rgba(255, 255, 255, .35); transition: width .35s var(--spring), background .25s; }
 .notch-scene .dots button::after { content: ""; position: absolute; inset: -.7cqw -.4cqw; }

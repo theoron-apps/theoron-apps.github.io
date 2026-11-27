@@ -1,0 +1,212 @@
+/* NotchIsland page. Builds on site.css: a MacBook stays on stage while the scenes change, and the
+   camera moves to whatever the scene is about. product.js sets data-shot on the stage. */
+.ni { --copy: 420px; --cam-ease: cubic-bezier(.65, 0, .2, 1); }
+
+/* ---------------------------------------------------------------- nav */
+.crumbs { display: flex; align-items: baseline; gap: 12px; }
+.crumb { display: inline-flex; align-items: baseline; gap: 12px; font-size: 15px; color: var(--muted); transition: color .2s; }
+.crumb::before { content: "/"; color: var(--line-2); }
+.crumb:hover { color: var(--ink); }
+
+/* ---------------------------------------------------------------- the MacBook */
+.ni-stage { position: relative; }
+.ni-cam { position: relative; transform-origin: 50% 0;
+  transition: transform 1.35s var(--cam-ease), opacity .9s var(--ease), filter .9s var(--ease); }
+/* light from the screen on the dark around it */
+.ni-cam::before { content: ""; position: absolute; z-index: -1; left: -32%; right: -32%; top: -30%; bottom: -40%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(122, 51, 96, .24), rgba(74, 63, 152, .1) 55%, transparent); transition: opacity 1.2s var(--ease); }
+.ni-device { container-type: inline-size; position: relative; aspect-ratio: 16 / 10.2; }
+.ni-device .notch-scene { background: none; overflow: visible; }
+.ni-device .notch-scene .mac { inset: 0; padding: .9cqw .9cqw 2.3cqw; border-radius: 3.2cqw 3.2cqw 1.2cqw 1.2cqw;
+  background: linear-gradient(180deg, #0e0e11, #050507 24%);
+  box-shadow: inset 0 0 0 .14cqw #2b2c30, inset 0 0 0 .32cqw #08080a, 0 4cqw 9cqw rgba(0, 0, 0, .55); }
+.ni-device .notch-scene .screen { border-radius: 2.3cqw 2.3cqw .3cqw .3cqw; }
+/* the base: a thin aluminium slab with the thumb groove */
+.ni-base { position: relative; width: 112%; margin: -.2% 0 0 -6%; aspect-ratio: 100 / 2.3; border-radius: 2px 2px 46% 46% / 2px 2px 100% 100%;
+  background: linear-gradient(180deg, #5a5c61 0, #303135 16%, #17181b 58%, #0b0b0d); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16); }
+.ni-base::before { content: ""; position: absolute; left: 50%; top: 0; width: 13%; height: 44%; transform: translateX(-50%); border-radius: 0 0 9px 9px;
+  background: linear-gradient(180deg, #0f0f12, #26272b); }
+.ni-base::after { content: ""; position: absolute; z-index: -1; left: 2%; right: 2%; top: 40%; height: 320%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, .8), transparent); }
+
+/* Shots. Every shot uses the same list of transforms, so the camera glides between them. */
+.ni-stage[data-shot="top"] .ni-cam { transform: translate(0, 1%) perspective(2600px) rotateY(-16deg) rotateX(5deg) scale(.94); }
+.ni-stage:is([data-shot="music"], [data-shot="stats"]) .ni-cam { transform: translate(0, 22%) perspective(2600px) rotateY(0deg) rotateX(0deg) scale(1.5); }
+.ni-stage[data-shot="agents"] .ni-cam { transform: translate(0, 12%) perspective(2600px) rotateY(0deg) rotateX(0deg) scale(1.85); }
+.ni-stage:is([data-shot="notifications"], [data-shot="activities"]) .ni-cam { transform: translate(0, 30%) perspective(2600px) rotateY(0deg) rotateX(0deg) scale(2.35); }
+.ni-stage[data-shot="more"] .ni-cam { transform: translate(24%, 4%) perspective(2600px) rotateY(-24deg) rotateX(4deg) scale(.8); }
+.ni-stage[data-shot="get"] .ni-cam { transform: translate(48%, 12%) perspective(2600px) rotateY(-34deg) rotateX(6deg) scale(.6); opacity: 0; filter: blur(8px); }
+.ni-stage:is([data-shot="notifications"], [data-shot="activities"]) .ni-cam::before { opacity: .55; }
+.ni-stage[data-shot="more"] .ni-cam { filter: brightness(.75); }
+/* a soft light around the island while music plays, as in the app */
+.ni .notch-scene:not(.paused) .island[data-state="compact"] { box-shadow: 0 0 2.6cqw -.2cqw color-mix(in srgb, var(--a1) 55%, transparent), 0 1.2cqw 3.6cqw rgba(0, 0, 0, .38); }
+
+/* ---------------------------------------------------------------- copy */
+.ni-copy[data-reveal] { opacity: 1; transform: none; }
+.ni-copy > * { opacity: 0; transform: translateY(22px); transition: opacity .8s var(--ease), transform .95s var(--ease); }
+.ni-copy.in > * { opacity: 1; transform: none; }
+.ni-copy.in > :nth-child(2) { transition-delay: .06s; } .ni-copy.in > :nth-child(3) { transition-delay: .12s; }
+.ni-copy.in > :nth-child(4) { transition-delay: .18s; } .ni-copy.in > :nth-child(5) { transition-delay: .24s; }
+.ni-copy.in > :nth-child(6) { transition-delay: .3s; } .ni-copy.in > :nth-child(n+7) { transition-delay: .36s; }
+.no-js .ni-copy > * { opacity: 1; transform: none; }
+
+.ni-copy { max-width: var(--copy); }
+.ni .eyebrow b { font-weight: 600; color: var(--green); letter-spacing: .12em; }
+.ni-copy h2 { font-size: clamp(40px, 3.9vw, 56px); }
+.ni-text { margin-top: 18px; font-size: 17px; color: var(--muted); }
+
+.ni-hero .pill { margin-bottom: 30px; }
+.ni-title { display: grid; justify-items: start; gap: 20px; }
+.ni-title img { width: 84px; height: 84px; filter: drop-shadow(0 14px 30px rgba(0, 0, 0, .5)); }
+.ni-title h1 { margin: 0; font-size: clamp(54px, 5.2vw, 78px); }
+.ni-tag { margin-top: 4px; font-family: var(--serif); font-style: italic; font-size: 24px; line-height: 1.25; color: rgba(242, 241, 236, .82); }
+.ni-hero .lead { margin-top: 18px; font-size: 17.5px; }
+.ni-hero .cta { margin-top: 34px; }
+.ni-hero .app-meta { margin-top: 20px; }
+.ni-hint { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--faint); }
+.ni-hint svg { width: 18px; height: 18px; }
+.ni-hint path { animation: wheel 1.8s var(--ease) infinite; }
+@keyframes wheel { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(5px); opacity: 0; } 100% { opacity: 0; } }
+
+.ni-list { list-style: none; margin-top: 26px; }
+.ni-list li { position: relative; padding: 12px 0 12px 26px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; line-height: 1.5; }
+.ni-list li:last-child { border-bottom: 1px solid var(--line); }
+.ni-list li::before { content: ""; position: absolute; left: 2px; top: 19px; width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--green); }
+.ni-list b { color: var(--ink); font-weight: 500; }
+
+.ni-try { display: flex; align-items: center; gap: 10px; margin-top: 22px; font-size: 14px; color: var(--green); }
+.ni-try::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); animation: breathe 2.4s ease-in-out infinite; }
+.ni-tip { align-items: baseline; color: var(--faint); }
+.ni-tip::before { background: var(--faint); box-shadow: none; animation: none; transform: translateY(-1px); }
+
+.ni-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.ni-chips li { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: rgba(242, 241, 236, .04); font-size: 14px; color: var(--muted);
+  transition: color .4s, background .4s, border-color .4s, box-shadow .4s; }
+.ni-chips li.on { color: var(--ink); border-color: rgba(140, 194, 171, .5); background: rgba(63, 117, 97, .2); box-shadow: 0 0 24px rgba(63, 117, 97, .25); }
+
+.ni-fan { position: relative; margin-top: 26px; padding: 22px 24px; border-radius: 20px; border: 1px solid rgba(140, 194, 171, .22);
+  background: radial-gradient(120% 140% at 100% 0%, rgba(63, 117, 97, .22), transparent 60%), rgba(242, 241, 236, .03); }
+.ni-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--green); background: rgba(63, 117, 97, .2); }
+.ni-fan h3 { margin-top: 12px; font-family: var(--serif); font-weight: 500; font-size: 26px; line-height: 1.15; }
+.ni-fan p { margin-top: 8px; font-size: 15px; color: var(--muted); }
+.ni-fan small { display: block; margin-top: 10px; font-size: 13px; color: var(--faint); }
+
+.ni-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 30px; }
+.ni-card { position: relative; padding: 18px 20px 20px; border-radius: 18px; border: 1px solid var(--line); background: var(--card);
+  opacity: 0; transform: translateY(16px); transition: opacity .8s var(--ease), transform .9s var(--ease), border-color .3s; }
+.ni-copy.in .ni-card { opacity: 1; transform: none; }
+.ni-card:hover { border-color: var(--line-2); }
+.ni-copy.in .ni-card:nth-child(1) { transition-delay: .2s; } .ni-copy.in .ni-card:nth-child(2) { transition-delay: .26s; }
+.ni-copy.in .ni-card:nth-child(3) { transition-delay: .32s; } .ni-copy.in .ni-card:nth-child(4) { transition-delay: .38s; }
+.ni-copy.in .ni-card:nth-child(5) { transition-delay: .44s; } .ni-copy.in .ni-card:nth-child(6) { transition-delay: .5s; }
+.ni-card svg { width: 24px; height: 24px; fill: none; stroke: var(--green); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ni-card h3 { margin-top: 12px; font-size: 15.5px; font-weight: 600; }
+.ni-card p { margin-top: 6px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.no-js .ni-card { opacity: 1; transform: none; }
+
+/* Download */
+.ni-get { position: relative; }
+.ni-get .ni-copy { max-width: 1080px; margin: 0 auto; text-align: center; }
+.ni-get-icon { width: 96px; height: 96px; margin: 0 auto 18px; filter: drop-shadow(0 22px 44px rgba(0, 0, 0, .55)); }
+.ni-get .eyebrow { justify-content: center; }
+.ni-get .eyebrow::after { content: ""; width: 26px; height: 1px; background: var(--line-2); }
+.ni-get h2 { font-size: clamp(46px, 4.6vw, 72px); }
+.ni-get .ni-text { max-width: 560px; margin-inline: auto; }
+.ni-get .cta { justify-content: center; margin-top: 30px; }
+.btn .ver { margin-left: 2px; padding: 2px 8px; border-radius: 999px; font-size: 12.5px; background: rgba(11, 12, 12, .1); }
+.ni-steps-title { margin-top: 48px; font-size: 12.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
+.ni-steps { list-style: none; counter-reset: step; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 18px; text-align: left; }
+.ni-steps li { counter-increment: step; padding: 18px 18px 20px; border-radius: 18px; border: 1px solid var(--line); background: var(--card); font-size: 14px; line-height: 1.5; color: var(--muted); }
+.ni-steps li::before { content: counter(step); display: grid; place-items: center; width: 28px; height: 28px; margin-bottom: 12px; border-radius: 50%;
+  border: 1px solid rgba(140, 194, 171, .45); color: var(--green); font-size: 13px; font-weight: 600; }
+.ni-steps b { color: var(--ink); font-weight: 500; }
+.ni-why { margin-top: 16px; font-size: 13.5px; color: var(--faint); }
+.ni-get::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 8%; width: 900px; height: 700px; transform: translateX(-50%); pointer-events: none;
+  background: radial-gradient(closest-side, rgba(63, 117, 97, .16), transparent); }
+
+/* ---------------------------------------------------------------- presentation mode (large screens) */
+/* --fade is where the stage starts to show; it moves with the camera, so the MacBook never
+   passes over the text, even mid-move. */
+@property --fade { syntax: "<length>"; inherits: false; initial-value: 600px; }
+html.cinema .ni-stage { position: fixed; inset: 68px 0 0; z-index: 10; pointer-events: none;
+  --wl: max(24px, (100vw - 1200px) / 2);
+  --right: min(100vw - var(--wl) + 40px, 100vw - 80px);
+  --dw: min(var(--right) - var(--wl) - var(--copy) - 64px, (100vh - 230px) * 1.45, 980px);
+  --fade: calc(var(--right) - var(--dw));
+  -webkit-mask-image: linear-gradient(90deg, transparent calc(var(--fade) - 150px), #000 calc(var(--fade) + 50px));
+  mask-image: linear-gradient(90deg, transparent calc(var(--fade) - 150px), #000 calc(var(--fade) + 50px));
+  transition: --fade .9s var(--cam-ease); }
+html.cinema .ni-stage[data-shot="more"] { --fade: calc(var(--wl) + 690px); }
+html.cinema .ni-cam { position: absolute; top: 50%; left: calc(var(--right) - var(--dw)); width: var(--dw); translate: 0 -54%; pointer-events: auto; }
+html.cinema .ni-stage[data-shot="get"] .ni-cam { pointer-events: none; }
+/* The scenes lie over the stage; only their text takes the pointer, so the island stays clickable. */
+html.cinema .ni-scene.scene { pointer-events: none; }
+html.cinema .ni-scene.is-active .ni-copy { pointer-events: auto; }
+html.cinema .ni-more { --copy: 600px; }
+html.cinema .ni-copy.in > * { transition-delay: .3s; }
+html.cinema .ni-copy.in > :nth-child(2) { transition-delay: .36s; } html.cinema .ni-copy.in > :nth-child(3) { transition-delay: .42s; }
+html.cinema .ni-copy.in > :nth-child(4) { transition-delay: .48s; } html.cinema .ni-copy.in > :nth-child(5) { transition-delay: .54s; }
+html.cinema .ni-copy.in > :nth-child(6) { transition-delay: .6s; } html.cinema .ni-copy.in > :nth-child(n+7) { transition-delay: .66s; }
+html.cinema .ni-scene:not(.is-active) .ni-copy > * { transition-delay: 0s; }
+html.cinema .ni-hint { position: absolute; left: max(24px, (100vw - 1200px) / 2); bottom: 30px; transition: opacity .6s var(--ease); }
+html.cinema #top:not(.is-active) .ni-hint { opacity: 0; }
+html.cinema #get { padding-bottom: var(--foot-h, 0px); }
+html.cinema .ni-get .ni-steps-title { margin-top: 34px; }
+html.cinema .ni-get .cta { margin-top: 26px; }
+html.cinema .ni-steps li { padding: 15px 16px 16px; font-size: 13.5px; }
+html.cinema .ni-steps li::before { width: 26px; height: 26px; margin-bottom: 10px; }
+/* The footer shares the last scene, so here it is a single slim row. */
+html.cinema .ni footer.scene { padding: 18px 0 16px; }
+html.cinema .ni footer.scene .foot { display: flex; align-items: center; gap: 28px; }
+html.cinema .ni footer.scene .foot > div { display: flex; align-items: center; gap: 28px; }
+html.cinema .ni footer.scene .foot > div:first-child { margin-right: auto; }
+html.cinema .ni footer.scene .motto { margin: 0; font-size: 16px; }
+html.cinema .ni footer.scene .foot h4 { display: none; }
+html.cinema .ni footer.scene .foot ul { display: flex; gap: 20px; font-size: 14px; }
+html.cinema .ni footer.scene .foot-bottom { margin-top: 14px; padding-top: 14px; }
+@media (max-height: 820px) { html.cinema .ni-get-icon { display: none; } }
+
+/* ---------------------------------------------------------------- scrolling page (phones, small windows) */
+html:not(.cinema) .ni-flow { padding-top: 68px; }
+html:not(.cinema) .ni-stage { position: sticky; top: 68px; z-index: 5; overflow: hidden; background: var(--bg);
+  --dw: min(100vw - 56px, 620px); height: calc(var(--dw) * .72 + 20px);
+  -webkit-mask-image: linear-gradient(#000 88%, transparent); mask-image: linear-gradient(#000 88%, transparent); }
+html:not(.cinema) .ni-cam { position: absolute; left: 50%; top: 50%; width: var(--dw); translate: -50% -50%; }
+html:not(.cinema) .ni-scene { padding: 64px 0; }
+html:not(.cinema) .ni-flow > .ni-scene { min-height: 64svh; }
+html:not(.cinema) .ni-hero { padding-top: 28px; }
+html:not(.cinema) .ni-hint { display: none; }
+html:not(.cinema) .ni-get { padding: 120px 0 40px; }
+html:not(.cinema) .ni-copy { max-width: 620px; }
+html:not(.cinema) .ni-get .ni-copy { max-width: 1080px; }
+html:not(.cinema) body.ni footer { margin-top: 60px; }
+/* text slides under the stage, so the bar above it must not show it through */
+html:not(.cinema) .ni .nav.scrolled { background: rgba(5, 6, 6, .96); }
+
+/* A wide window that is too short for presentation mode (or reduced motion): stage on the right. */
+@media (min-width: 1021px) {
+  html:not(.cinema) .ni-flow { display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 1fr); align-items: start; max-width: 1248px; margin: 0 auto; }
+  html:not(.cinema) .ni-stage { grid-column: 2; grid-row: 1 / span 7; height: calc(100vh - 68px); background: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 56px); mask-image: linear-gradient(90deg, transparent, #000 56px);
+    --dw: min(100% - 40px, 720px, (100vh - 200px) * 1.45); }
+  html:not(.cinema) .ni-flow > .ni-scene { grid-column: 1; min-height: calc(100vh - 68px); display: flex; flex-direction: column; justify-content: center; }
+}
+@media (max-width: 1020.98px) {
+  .ni-steps { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+}
+@media (max-width: 760px) {
+  .ni-title img { width: 68px; height: 68px; }
+  .ni-title h1 { font-size: 52px; }
+  .ni-tag { font-size: 21px; }
+  .ni-cards { grid-template-columns: 1fr; }
+  .ni-get-icon { width: 92px; height: 92px; }
+}
+@media (max-width: 420px) {
+  .crumb { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ni-cam, .ni-cam::before { transition-duration: .01s; }
+  .ni-copy > *, .ni-card { transition: none; opacity: 1; transform: none; }
+  .ni-try::before, .ni-hint path { animation: none; }
+}
