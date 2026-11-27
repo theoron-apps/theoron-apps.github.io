@@ -170,6 +170,23 @@ addEventListener('scroll', queueFx, { passive: true });
 addEventListener('resize', queueFx);
 updateFx();
 
+// Depth from the pointer: the hero's layers (copy, glow, light) drift by different amounts.
+if (!reducedMotion && matchMedia('(pointer: fine)').matches) {
+  const heroEl = document.getElementById('top');
+  const m = { x: 0, y: 0, tx: 0, ty: 0 };
+  let raf = 0;
+  const tick = () => {
+    m.x += (m.tx - m.x) * 0.07; m.y += (m.ty - m.y) * 0.07;
+    heroEl.style.setProperty('--px', m.x.toFixed(4));
+    heroEl.style.setProperty('--py', m.y.toFixed(4));
+    raf = Math.abs(m.tx - m.x) + Math.abs(m.ty - m.y) > 0.0005 ? requestAnimationFrame(tick) : 0;
+  };
+  addEventListener('pointermove', (e) => {
+    m.tx = e.clientX / innerWidth - 0.5; m.ty = e.clientY / innerHeight - 0.5;
+    if (!raf) raf = requestAnimationFrame(tick);
+  }, { passive: true });
+}
+
 // A soft light follows the cursor over cards.
 if (matchMedia('(pointer: fine)').matches) {
   for (const el of document.querySelectorAll('.spot')) {

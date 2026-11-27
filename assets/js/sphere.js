@@ -23,6 +23,7 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
 
   const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
   camera.position.set(0, 0, 11);
+  if (!centered) scene.fog = new THREE.Fog(0x070909, 12, 34); // far things sink into the dark
 
   // A warm key light, a green rim from behind (the brand colour) and a soft fill.
   const key = new THREE.DirectionalLight(0xfff6ea, 3); key.position.set(-4, 5, 6);
@@ -71,8 +72,9 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
   const E = 1.3;           // ecliptic band
 
   const root = new THREE.Group();
-  const rig = new THREE.Group();   // follows the pointer
-  rig.add(root); scene.add(rig);
+  const anchor = new THREE.Group(); // where the sphere stands; carries its floor and shadow
+  const rig = new THREE.Group();    // follows the pointer and drags
+  rig.add(root); anchor.add(rig); scene.add(anchor);
 
   // Fixed meridian: a wide flat ring facing the viewer, engraved on its face.
   const meridian = new THREE.Group();
@@ -108,6 +110,7 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
     const cap = new THREE.Mesh(new THREE.SphereGeometry(0.055, 32, 32), metal); cap.position.y = y * R * 0.96; root.add(cap);
   }
   root.rotation.copy(BASE_ROTATION);
+  const env = centered ? null : buildEnvironment(scene, anchor, camera, { weak: weakDevice });
 
   let time = fixedTime ?? 0, last = performance.now(), running = false, visible = true;
   const ease = (x) => 1 - Math.pow(1 - x, 3);
@@ -124,9 +127,9 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
     const viewW = viewH * camera.aspect;
     const wide = w / h > 1.1;
     if (centered) Object.assign(layout, { x: 0, y: 0, scale });
-    else Object.assign(layout, { x: wide ? Math.min(viewW * 0.22, 3.1) : 0, y: wide ? 0 : viewH * 0.25, scale: wide ? 1 : Math.min(0.62, viewW / 5.2) });
+    else Object.assign(layout, { x: wide ? Math.min(viewW * 0.22, 3.1) : 0, y: wide ? 0 : viewH * 0.27, scale: wide ? 1 : Math.min(0.62, viewW / 5.2) });
   }
-  new ResizeObserver(() => { resize(); if (!running) render(); }).observe(canvas);
+  new ResizeObserver(() => { resize(); env?.setDim(canvas.clientWidth / Math.max(1, canvas.clientHeight) > 1.1 ? 1 : 0.4); if (!running) render(); }).observe(canvas);
   resize();
 
   // ---------------------------------------------------------------- input
@@ -142,7 +145,7 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
     const r = canvas.getBoundingClientRect();
     ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     raycaster.setFromCamera(ndc, camera);
-    bounds.set(rig.position, 1.95 * root.scale.x);
+    bounds.set(anchor.position, 1.95 * anchor.scale.x * root.scale.x);
     return raycaster.ray.intersectsSphere(bounds);
   }
   if (fixedTime === null) {
@@ -186,9 +189,10 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
   // ---------------------------------------------------------------- loop
   function render() {
     const intro = reducedMotion || fixedTime !== null ? 1 : ease(Math.min(1, time / 2.4));
-    root.scale.setScalar(layout.scale * (0.86 + 0.14 * intro));
-    rig.position.set(layout.x, layout.y + scroll * 0.9, 0);
-    root.rotation.x = BASE_ROTATION.x + scroll * 0.5;
+    root.scale.setScalar(0.86 + 0.14 * intro);
+    anchor.scale.setScalar(layout.scale);
+    anchor.position.set(layout.x, layout.y + scroll * 0.9, 0);
+    root.rotation.x = BASE_ROTATION.x - (env ? 0.2 : 0) + scroll * 0.5; // with the camera above the floor, tilt back to face it
     spin.rotation.y = time * 0.12 + scroll * 1.2 - (1 - intro) * 1.4;
     orbit.rotation.y = -time * 0.45;
     ecliptic.rotation.z = TILT + scroll * 0.35;
@@ -200,6 +204,12 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
     parallax.x += (parallax.tx - parallax.x) * 0.05;
     parallax.y += (parallax.ty - parallax.y) * 0.05;
     rig.rotation.set(parallax.y * 0.2 + drag.pitch, parallax.x * 0.35 + drag.yaw, 0, 'YXZ');
+    if (env) {
+      // The camera drifts with the pointer: near dust slides past, far dust barely moves.
+      camera.position.set(parallax.x * 0.9, 2.3 - parallax.y * 0.6, 11);
+      camera.lookAt(parallax.x * 0.3, 0.05 - parallax.y * 0.12, 0);
+      env.update(time, intro);
+    }
     renderer.render(scene, camera);
   }
 
@@ -304,4 +314,91 @@ function brushedTexture() {
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1, 3);
   return t;
+}
+
+// Space around the sphere: three layers of dust at different depths, a floor of engraved orbits
+// fading into the dark, and a soft pool of light with a shadow under the sphere.
+function buildEnvironment(scene, anchor, camera, { weak }) {
+  const glowTex = (inner, outer) => {
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const g = c.getContext('2d'), r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    r.addColorStop(0, inner); r.addColorStop(1, outer);
+    g.fillStyle = r; g.fillRect(0, 0, 128, 128);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  };
+  const dotTex = glowTex('rgba(255,255,255,1)', 'rgba(255,255,255,0)');
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const tanHalf = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+
+  // Dust: near, middle and far layers.
+  const dust = new THREE.Group(); scene.add(dust);
+  const warm = new THREE.Color(0xf2efe6), green = new THREE.Color(0x8cc2ab);
+  for (const L of [
+    { n: 60, z: [3, 7], size: 0.085, opacity: 0.5 },
+    { n: 150, z: [-4, 3], size: 0.05, opacity: 0.45 },
+    { n: 340, z: [-26, -4], size: 0.06, opacity: 0.4 },
+  ]) {
+    const count = weak ? Math.round(L.n / 2) : L.n;
+    const pos = new Float32Array(count * 3), col = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const z = rnd(...L.z), halfH = tanHalf * (11 - z) * 1.25, halfW = halfH * 2.1;
+      pos.set([rnd(-halfW, halfW), rnd(-halfH, halfH), z], i * 3);
+      const c = warm.clone().lerp(green, Math.random() * 0.6).multiplyScalar(rnd(0.5, 1));
+      col.set([c.r, c.g, c.b], i * 3);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    dust.add(new THREE.Points(geo, new THREE.PointsMaterial({ size: L.size, map: dotTex, vertexColors: true, transparent: true,
+      opacity: L.opacity, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true })));
+  }
+
+  // The floor: concentric orbits under the sphere, wider and fainter as they go.
+  const floor = new THREE.Group(); floor.position.y = -2.3; anchor.add(floor);
+  // Each ring is brightest behind the sphere and fades on the side facing the viewer,
+  // so the arcs that pass under the text stay quiet.
+  const ringLine = (r, strength) => {
+    const n = 256, pos = new Float32Array((n + 1) * 3), col = new Float32Array((n + 1) * 3), base = new THREE.Color(0x8cc2ab);
+    for (let i = 0; i <= n; i++) {
+      const t = (i / n) * Math.PI * 2, x = Math.cos(t) * r, z = Math.sin(t) * r;
+      const f = strength * (0.05 + 0.95 * (1 - Math.max(0, z / r)) ** 2);
+      pos.set([x, 0, z], i * 3); col.set([base.r * f, base.g * f, base.b * f], i * 3);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    return new THREE.Line(g, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending }));
+  };
+  const radii = [];
+  for (let k = 0; k < 8; k++) {
+    const r = 2.1 * Math.pow(1.32, k); radii.push(r);
+    floor.add(ringLine(r, (1 - k / 9) ** 1.4));
+  }
+  // A few small bodies travel along the orbits.
+  const bodies = [1, 3, 5].map((k, i) => {
+    const m = new THREE.Sprite(new THREE.SpriteMaterial({ map: dotTex, color: i ? 0xdcebe4 : 0x8cc2ab, transparent: true, opacity: 0.9, depthWrite: false, blending: THREE.AdditiveBlending }));
+    m.scale.setScalar(0.22 - i * 0.03);
+    floor.add(m);
+    return { m, r: radii[k], speed: 0.09 / (i + 1), phase: i * 2.1 };
+  });
+  // A pool of light and a soft shadow right under the sphere.
+  const flat = (size, tex, blending, opacity, y) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity, depthWrite: false, blending, fog: false }));
+    m.rotation.x = -Math.PI / 2; m.position.y = y; floor.add(m); return m;
+  };
+  flat(7.5, glowTex('rgba(140,194,171,0.28)', 'rgba(140,194,171,0)'), THREE.AdditiveBlending, 1, 0.005);
+  const shadow = flat(3.6, glowTex('rgba(0,0,0,0.75)', 'rgba(0,0,0,0)'), THREE.NormalBlending, 1, 0.01);
+
+  const lines = floor.children.filter((c) => c.isLine);
+  return {
+    // Quieter floor on portrait screens, where the text sits right under the sphere.
+    setDim(f) { for (const l of lines) l.material.opacity = 0.55 * f; },
+    update(time, intro) {
+      dust.rotation.y = time * 0.012;
+      dust.position.y = Math.sin(time * 0.1) * 0.15;
+      for (const b of bodies) { const t = time * b.speed + b.phase; b.m.position.set(Math.cos(t) * b.r, 0.02, Math.sin(t) * b.r); }
+      shadow.material.opacity = 0.9 * intro;
+      floor.position.y = -2.3 + (1 - intro) * -0.6;
+    },
+  };
 }

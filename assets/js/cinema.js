@@ -79,7 +79,7 @@ export function initCinema({ reducedMotion }) {
         el.classList.toggle('scene', on);
         el.classList.toggle('scene-app', on && !!s.app);
         el.style.setProperty('--z', String(i + 1));
-        if (!on) { el.classList.remove('is-active', 'is-before', 'is-after'); el.inert = false; el.removeAttribute('tabindex'); }
+        if (!on) { el.classList.remove('is-active', 'is-before', 'is-after', 'is-next', 'tilting'); el.inert = false; el.removeAttribute('tabindex'); for (const v of ['--rx', '--ry', '--tilt']) el.style.removeProperty(v); }
         else el.tabIndex = -1;
       }));
       if (on) {
@@ -141,6 +141,10 @@ export function initCinema({ reducedMotion }) {
       el.classList.toggle('is-active', k === i);
       el.classList.toggle('is-before', k < i);
       el.classList.toggle('is-after', k > i);
+      el.classList.toggle('is-next', k === i + 1);
+      el.classList.remove('tilting');
+      // Depth order: passed scenes fly past in front, scenes ahead wait behind, nearest first.
+      el.style.setProperty('--z', String(k === i ? 50 : k < i ? 60 : 40 - (k - i)));
       el.inert = k !== i;
       // Reveal animations replay each time a scene comes into view.
       const reveals = el.matches('[data-reveal]') ? [el, ...el.querySelectorAll('[data-reveal]')] : [...el.querySelectorAll('[data-reveal]')];
@@ -154,6 +158,26 @@ export function initCinema({ reducedMotion }) {
     // Keep keyboard focus with the visible scene, so Tab continues from there.
     if (focus || focusWasInside) scenes[i].els[0].focus({ preventScroll: true });
     if (!instant) lockedUntil = performance.now() + STEP_MS;
+    clearTimeout(tiltTimer);
+    if (scenes[i].app) tiltTimer = setTimeout(() => scenes[i].els[0].classList.add('tilting'), instant ? 0 : STEP_MS);
+  }
+  let tiltTimer = null;
+
+  // ---------------------------------------------------------------- card tilt
+  // The current app card leans a little toward the pointer, like a glass panel.
+  if (!reducedMotion && matchMedia('(pointer: fine)').matches) {
+    for (const s of scenes.filter((x) => x.app)) {
+      const card = s.els[0];
+      card.addEventListener('pointermove', (e) => {
+        if (!on || !card.classList.contains('is-active')) return;
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.setProperty('--rx', `${(-y * 5).toFixed(2)}deg`);
+        card.style.setProperty('--ry', `${(x * 7).toFixed(2)}deg`);
+        card.style.setProperty('--tilt', Math.min(1, Math.hypot(x, y) * 2).toFixed(2));
+      });
+      card.addEventListener('pointerleave', () => { for (const v of ['--rx', '--ry', '--tilt']) card.style.removeProperty(v); });
+    }
   }
   const go = (delta, opts) => {
     if (performance.now() < lockedUntil) return false;
