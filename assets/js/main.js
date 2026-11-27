@@ -1,5 +1,6 @@
 import { dict, LANGS } from './i18n.js';
 import { initIsland } from './island.js';
+import { initCinema } from './cinema.js';
 
 const APPS = {
   NotchIsland: { icon: 'assets/img/notchisland-icon.png', tag: 'notch.tag', repo: 'theoron-apps/NotchIsland' },
@@ -103,12 +104,13 @@ async function loadReleases() {
 
 // ------------------------------------------------------------------ nav + reveal
 const nav = document.getElementById('nav');
-const onScroll = () => nav.classList.toggle('scrolled', scrollY > 24);
+const onScroll = () => { if (!document.documentElement.classList.contains('cinema')) nav.classList.toggle('scrolled', scrollY > 24); };
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
 if ('IntersectionObserver' in window && !reducedMotion) {
   const io = new IntersectionObserver((entries) => {
+    if (document.documentElement.classList.contains('cinema')) return; // scenes reveal themselves
     for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
   for (const el of document.querySelectorAll('[data-reveal]')) io.observe(el);
@@ -136,6 +138,7 @@ let fxQueued = false;
 function updateFx() {
   fxQueued = false;
   const vh = innerHeight, y = scrollY, max = document.documentElement.scrollHeight - vh;
+  if (document.documentElement.classList.contains('cinema')) return; // scenes drive everything there
   fx.progress.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
   if (reducedMotion) return;
   if (y < vh * 1.2) {
@@ -209,3 +212,4 @@ loadReleases();
 
 const notchScene = document.querySelector('.notch-scene');
 if (notchScene) initIsland(notchScene, document.querySelector('.try'), { reducedMotion });
+initCinema({ reducedMotion });

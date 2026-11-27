@@ -57,6 +57,7 @@
 
 <!-- ============================================================ hero -->
 <section class="hero" id="top">
+<div class="hero-pin">
   <div class="hero-stage" aria-hidden="true">
     <canvas id="sphere"></canvas>
     <img class="sphere-fallback" src="assets/img/sphere.webp" alt="" loading="lazy" hidden>
@@ -76,6 +77,7 @@
     </div>
   </div>
   <div class="hero-mark" aria-hidden="true">θεωρῶν</div>
+</div>
 </section>
 
 <!-- ============================================================ apps -->
@@ -400,6 +402,17 @@
     </div>
   </div>
 </footer>
+
+<nav class="scene-dots" aria-label="Sections">
+  <button type="button" data-go="0"><span>Theoron</span></button>
+  <button type="button" data-go="1"><span data-i18n="nav.apps">Apps</span></button>
+  <button type="button" data-go="2"><span>NotchIsland</span></button>
+  <button type="button" data-go="3"><span>Outputs</span></button>
+  <button type="button" data-go="4"><span>Conversio</span></button>
+  <button type="button" data-go="5"><span data-i18n="nav.releases">Releases</span></button>
+  <button type="button" data-go="6"><span data-i18n="nav.principles">Principles</span></button>
+  <button type="button" data-go="7"><span data-i18n="nav.support">Support</span></button>
+</nav>
 
 <script type="importmap">{ "imports": { "three": "./assets/vendor/three.module.min.js" } }</script>
 <script type="module" src="assets/js/main.js"></script>

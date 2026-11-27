@@ -178,7 +178,7 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
   function onScroll() {
     const h = hero ? hero.offsetHeight : innerHeight;
     scroll = Math.min(1, Math.max(0, scrollY / h));
-    stage.style.opacity = String(1 - scroll * 0.75);
+    stage.style.opacity = document.documentElement.classList.contains('cinema') ? '' : String(1 - scroll * 0.75);
     if (!running) render();
   }
   if (fixedTime === null) { addEventListener('scroll', onScroll, { passive: true }); onScroll(); }
@@ -218,7 +218,15 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
   }
 
   if (hero && 'IntersectionObserver' in window) {
-    new IntersectionObserver(([e]) => { visible = e.isIntersecting; setRunning(true); }).observe(hero);
+    const hidden = () => hero.classList.contains('scene') && !hero.classList.contains('is-active');
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting && !hidden(); setRunning(true); }).observe(hero);
+    // In presentation mode the hero is a scene; stop drawing while another scene is shown.
+    let pauseTimer = null;
+    addEventListener('theoron:hero', (e) => {
+      clearTimeout(pauseTimer);
+      if (e.detail) { visible = true; setRunning(true); }
+      else pauseTimer = setTimeout(() => { visible = false; setRunning(true); }, 1100); // let it fade out first
+    });
   }
   document.addEventListener('visibilitychange', () => setRunning(true));
 
