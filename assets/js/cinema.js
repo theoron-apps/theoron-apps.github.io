@@ -189,10 +189,13 @@ export function initCinema({ reducedMotion }) {
   };
 
   // ---------------------------------------------------------------- wheel
-  // One gesture moves one scene. A trackpad keeps sending a decaying stream of events after the
-  // fingers lift (inertia); that tail is ignored, even across a short hiccup in the stream, while
-  // a fresh flick (a delta that jumps well above the tail) counts as a new gesture.
+  // One gesture moves one scene. A trackpad keeps sending events after the fingers lift (inertia),
+  // and during a strong swipe the speed wobbles and can pick up again as the inertia takes over.
+  // All of that belongs to the same gesture. A new flick counts only once the stream has clearly
+  // died down (below 40% of its peak, at least 600 ms after the step) and then speeds up again.
+  const FRESH_AFTER_MS = 600, FRESH_DROP = 0.4;
   let gestureUsed = false, flickHandled = false, lastWheel = -Infinity, prevAbs = 0, rising = 0, decaying = 0, acc = 0;
+  let peak = 0, trough = 0;
   let lastStepAt = -Infinity, pendingTimer = null;
   // A flick made while a transition is still running is not lost: it lands when the transition ends.
   function queueStep(dir) {
@@ -209,21 +212,27 @@ export function initCinema({ reducedMotion }) {
     decaying = abs < prev ? decaying + 1 : 0;
     if (decaying >= 3) flickHandled = false;                    // the flick has turned into its inertial tail
     lastWheel = t; prevAbs = abs;
+    if (gestureUsed) {
+      if (abs > peak && trough >= peak * 0.95) peak = trough = abs; // still speeding up into the swipe
+      else trough = Math.min(trough, abs);
+    }
     if (gap > GESTURE_GAP) {
       // A pause ends the gesture, unless the transition is still running or it was only a hiccup
       // in a decaying inertial tail (a real new flick is caught by its speed-up below).
       const tail = gestureUsed && (now < lockedUntil || (wasDecaying && abs <= prev * 1.25));
       if (!tail) { gestureUsed = false; flickHandled = false; acc = 0; }
-    } else if (gestureUsed && !flickHandled && ((rising >= 3 && abs > 8) || abs > Math.max(14, prev * 2.2))) {
+    } else if (gestureUsed && !flickHandled && now - lastStepAt >= FRESH_AFTER_MS && trough <= peak * FRESH_DROP
+      && rising >= 3 && abs >= Math.max(12, trough * 2.5)) {
       // Speed building up again on top of a tail: the fingers flicked once more.
       flickHandled = true;
+      peak = trough = abs;
       if (now < lockedUntil) { queueStep(Math.sign(e.deltaY)); return; }
       gestureUsed = false; acc = 0;
     }
     if (gestureUsed) return;
     acc += e.deltaY;
     if (Math.abs(acc) > 24 && now >= lockedUntil) {
-      gestureUsed = true; flickHandled = true;
+      gestureUsed = true; flickHandled = true; peak = trough = abs;
       go(acc > 0 ? 1 : -1);
     }
   }, { passive: false });
