@@ -1,10 +1,11 @@
-// The armillary sphere in the hero. Everything is built from code: no model files,
-// so it stays sharp at any size and weighs a few kilobytes on top of three.js.
+// The armillary sphere in the hero: oxidized silver rings around an engraved silver globe.
+// Everything is built from code: no model files, so it stays sharp at any size and weighs
+// a few kilobytes on top of three.js.
 import * as THREE from 'three';
 import { RoomEnvironment } from '../vendor/RoomEnvironment.js';
 
 const TILT = THREE.MathUtils.degToRad(23.4);
-const BASE_ROTATION = new THREE.Euler(0.32, -0.45, -0.38);
+const BASE_ROTATION = new THREE.Euler(0.12, 0, -0.42); // the meridian faces the viewer, like the avatar
 
 // Options: centered/scale/fixedTime render a still, centred frame (used for avatars and previews);
 // onFirstDrag fires once when the visitor first turns the sphere.
@@ -13,7 +14,7 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
   const weakDevice = (navigator.hardwareConcurrency || 8) <= 4;
   renderer.setPixelRatio(Math.min(devicePixelRatio, weakDevice ? 1.25 : 1.75));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.2;
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -24,17 +25,20 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
   camera.position.set(0, 0, 11);
 
   // A warm key light, a green rim from behind (the brand colour) and a soft fill.
-  const key = new THREE.DirectionalLight(0xfff6ea, 2.4); key.position.set(-4, 5, 6);
-  const rim = new THREE.DirectionalLight(0x8cc2ab, 3.2); rim.position.set(5, 1.5, -5);
+  const key = new THREE.DirectionalLight(0xfff6ea, 3); key.position.set(-4, 5, 6);
+  const rim = new THREE.DirectionalLight(0x8cc2ab, 10); rim.position.set(5, 1.5, -5);
   const fill = new THREE.DirectionalLight(0xffffff, 0.35); fill.position.set(2, -4, 3);
   scene.add(key, rim, fill);
 
   // ---------------------------------------------------------------- materials
-  const metal = new THREE.MeshPhysicalMaterial({ color: 0x23272a, metalness: 1, roughness: 0.3, clearcoat: 0.4, clearcoatRoughness: 0.25 });
-  const engraved = new THREE.MeshStandardMaterial({ color: 0x9aa09d, metalness: 1, roughness: 0.22 });
-  const obsidian = new THREE.MeshPhysicalMaterial({ color: 0x07090a, metalness: 0.15, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.06, envMapIntensity: 1.5 });
+  // Oxidized, brushed silver; engravings are dark, like niello.
+  try { await document.fonts.load('500 120px "EB Garamond"', 'ΘΕΩΡΝ'); } catch { /* falls back to a system serif */ }
+  const brushed = brushedTexture();
+  const metal = new THREE.MeshPhysicalMaterial({ color: 0x99a0a4, metalness: 1, roughness: 0.34, roughnessMap: brushed, clearcoat: 0.5, clearcoatRoughness: 0.3 });
+  const engraved = new THREE.MeshStandardMaterial({ color: 0x1b1f21, metalness: 1, roughness: 0.22 });
   const glow = new THREE.MeshStandardMaterial({ color: 0xaee0ca, emissive: 0x5fb08f, emissiveIntensity: 2.2, roughness: 0.3 });
-  const band = new THREE.MeshPhysicalMaterial({ map: await engravingTexture(renderer), metalness: 1, roughness: 0.36, side: THREE.DoubleSide });
+  const band = new THREE.MeshPhysicalMaterial({ map: engravingTexture(renderer), metalness: 1, roughness: 0.38, roughnessMap: brushed, side: THREE.DoubleSide });
+  const globe = new THREE.MeshPhysicalMaterial({ map: globeTexture(renderer), metalness: 1, roughness: 0.32, clearcoat: 0.5, clearcoatRoughness: 0.25 });
 
   // ---------------------------------------------------------------- parts
   // A ring with a machined cross-section (a rectangle with chamfered edges),
@@ -97,11 +101,11 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
   planet.add(new THREE.PointLight(0x8cc2ab, 2.5, 3, 2));
   orbit.add(planet);
 
-  // Obsidian core, polar axis and finials.
-  root.add(new THREE.Mesh(new THREE.SphereGeometry(0.42, 96, 96), obsidian));
-  root.add(new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, R * 2.55, 16), metal));
+  // The globe at the centre, and the polar axis that ends on the meridian.
+  root.add(new THREE.Mesh(new THREE.SphereGeometry(0.59, 128, 128), globe));
+  root.add(new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, R * 1.92, 16), metal));
   for (const y of [-1, 1]) {
-    const cap = new THREE.Mesh(new THREE.SphereGeometry(0.055, 32, 32), metal); cap.position.y = y * R * 1.275; root.add(cap);
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(0.055, 32, 32), metal); cap.position.y = y * R * 0.96; root.add(cap);
   }
   root.rotation.copy(BASE_ROTATION);
 
@@ -225,17 +229,16 @@ export async function createSphere(canvas, { reducedMotion = false, hero, center
 }
 
 // The ecliptic band: graduations along both edges and "ΘΕΩΡΩΝ" engraved twice around.
-async function engravingTexture(renderer) {
-  try { await document.fonts.load('500 120px "EB Garamond"', 'ΘΕΩΡΝ'); } catch { /* falls back to a system serif */ }
+function engravingTexture(renderer) {
   const W = 4096, H = 320;
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const g = c.getContext('2d');
-  g.fillStyle = '#4f5557'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#8b9194'; g.fillRect(0, 0, W, H);
   for (let i = 0; i < 700; i++) { // brushed metal
     g.fillStyle = `rgba(255,255,255,${(Math.random() * 0.05).toFixed(3)})`;
     g.fillRect(0, Math.random() * H, W, 1);
   }
-  g.fillStyle = '#e6ebe8';
+  g.fillStyle = '#111416';
   for (let i = 0; i < 360; i++) {
     const x = (i / 360) * W, len = i % 30 === 0 ? 74 : i % 5 === 0 ? 46 : 26;
     g.fillRect(x - 1.5, 0, 3, len);
@@ -253,4 +256,44 @@ async function engravingTexture(renderer) {
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
   return tex;
+}
+
+// The globe: a graticule every 15°, dashed tropics and "ΘΕΩΡΩΝ" along the equator.
+function globeTexture(renderer) {
+  const W = 2048, H = 1024;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  g.fillStyle = '#9aa1a5'; g.fillRect(0, 0, W, H);
+  for (let i = 0; i < 900; i++) { g.fillStyle = `rgba(0,0,0,${(Math.random() * 0.06).toFixed(3)})`; g.fillRect(Math.random() * W, 0, 1, H); }
+  g.strokeStyle = '#1b1f21';
+  for (let lon = 0; lon < 24; lon++) {
+    g.lineWidth = lon % 6 === 0 ? 5 : 2.5;
+    const x = (lon / 24) * W; g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke();
+  }
+  for (let lat = -75; lat <= 75; lat += 15) {
+    g.lineWidth = lat === 0 ? 6 : 2.5;
+    const y = H / 2 - (lat / 180) * H; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke();
+  }
+  g.setLineDash([14, 12]); g.lineWidth = 2.5;
+  for (const lat of [-23.4, 23.4]) { const y = H / 2 - (lat / 180) * H; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  g.setLineDash([]);
+  g.fillStyle = '#1b1f21'; g.font = '500 54px "EB Garamond", Georgia, serif'; g.textAlign = 'center';
+  [...'ΘΕΩΡΩΝ'].forEach((ch, i) => g.fillText(ch, ((i + 0.5) / 6) * W, H / 2 - 22));
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  return tex;
+}
+
+// Brushed metal: fine streaks running around each ring (u goes around, v across the profile).
+function brushedTexture() {
+  const c = document.createElement('canvas'); c.width = 64; c.height = 1024;
+  const g = c.getContext('2d');
+  for (let y = 0; y < 1024; y++) {
+    const v = Math.round(160 + (Math.random() - 0.5) * 133);
+    g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(0, y, 64, 1);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1, 3);
+  return t;
 }
